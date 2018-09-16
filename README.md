@@ -18,4 +18,4 @@ File structure:
 
 The folder `v2.1` has the current release of usb-scanner in it
 
-The folder `v3.1` has the version under development of usb-scanner in it. ## This version is not yet working. ##
+The folder `v3.1` has the version under development of usb-scanner in it. This version is not yet working.

@@ -37,8 +37,10 @@ if [ -f $HOME/.xboxdrv/layout.conf ]; then
 	exit 2
 else
 	#set up default layout
-	LEFTANALOG="x1=KEY_A:KEY_D,y1=KEY_W:KEY_S"
-	RIGHTANALOG="x2=REL_X:20,y2=REL_Y:20"
+	LEFTANALOG_X="KEY_A:KEY_D"
+	LEFTANALOG_Y="KEY_W:KEY_S"
+	RIGHTANALOG_X="REL_X:20"
+	RIGHTANALOG_Y="REL_Y:20"
 	LEFT_BUT="KEY_LEFTSHIFT"
 	RIGHT_BUT="KEY_LEFTCTRL"
 	LEFT_BUMP="KEY_Q"
@@ -84,7 +86,7 @@ support () {
 usupport () {
 	for y in $usb; do
 		sleep 0.1s
-		echo "$custom_add" | grep  -q -e "$y" && (pkexec xboxdrv --detach-kernel-driver -s --device-name "Game Pad" --device-by-id "$y" --type xbox360 --deadzone 4000 --dpad-as-button --trigger-as-button --ui-axismap "$RIGHTANALOG, $LEFTANALOG" --ui-buttonmap "tl=$LEFT_BUT,tr=$RIGHT_BUT" --ui-buttonmap "a=$A_BUT,b=$B_BUT,x=$X_BUT,y=$Y_BUT" --ui-buttonmap "lb=$LEFT_BUMP,rb=$RIGHT_BUMP" --ui-buttonmap "lt=$LEFT_TRIG,rt=$RIGHT_TRIG" --ui-buttonmap "dl=$LEFT,dr=$RIGHT,du=$UP,dd=$DOWN" --ui-buttonmap "back=$BACK_BUT,start=$START_BUT,guide=$HOME_BUT" &) && echo "$y" >> $mounted_loc && mounted=$(cat $mounted_loc)
+		echo "$custom_add" | grep  -q -e "$y" && (pkexec xboxdrv --detach-kernel-driver -s --device-name "Game Pad" --device-by-id "$y" --type xbox360 --deadzone 4000 --dpad-as-button --trigger-as-button --ui-axismap "x2=$RIGHTANALOG_X,y2=$RIGHTANALOG_Y,x1=$LEFTANALOG_X,y1=$LEFTANALOG_Y" --ui-buttonmap "tl=$LEFT_BUT,tr=$RIGHT_BUT" --ui-buttonmap "a=$A_BUT,b=$B_BUT,x=$X_BUT,y=$Y_BUT" --ui-buttonmap "lb=$LEFT_BUMP,rb=$RIGHT_BUMP" --ui-buttonmap "lt=$LEFT_TRIG,rt=$RIGHT_TRIG" --ui-buttonmap "dl=$LEFT,dr=$RIGHT,du=$UP,dd=$DOWN" --ui-buttonmap "back=$BACK_BUT,start=$START_BUT,guide=$HOME_BUT" &) && echo "$y" >> $mounted_loc && mounted=$(cat $mounted_loc)
 	done
 }
 

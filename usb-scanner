@@ -31,6 +31,31 @@ mounted=$(cat $mounted_loc)
 custom_add=$(cat "$HOME/.xboxdrv/custom_add.list")
 supported=$(cat "$HOME/.xboxdrv/supported.list")
 edit="$HOME/.xboxdrv/edit.list"
+#check for layout.conf file
+if [ -f $HOME/.xboxdrv/layout.conf ]; then
+	#parse and load file
+else
+	#set up default layout
+	LEFTANALOG="x1=KEY_A:KEY_D,y1=KEY_W:KEY_S"
+	RIGHTANALOG="x2=REL_X:20,y2=REL_Y:20"
+	LEFT_BUT="KEY_LEFTSHIFT"
+	RIGHT_BUT="KEY_LEFTCTRL"
+	LEFT_BUMP="KEY_Q"
+	RIGHT_BUMP="KEY_E"
+	LEFT_TRIG="BTN_RIGHT"
+	RIGHT_TRIG="BTN_LEFT"
+	A_BUT="KEY_SPACE"
+	B_BUT="KEY_C"
+	X_BUT="KEY_1"
+	Y_BUT="KEY_R"
+	HOME_BUT="void"
+	START_BUT="KEY_ENTER"
+	BACK_BUT="KEY_ESC"
+	UP="BTN_MIDDLE"
+	DOWN="KEY_TAB"
+	LEFT="KEY_4"
+	RIGHT="KEY_B"
+fi
 
 #scan usb devices and get list of Product:Vendor IDs (PVIDs)
 scan () {
@@ -58,7 +83,7 @@ support () {
 usupport () {
 	for y in $usb; do
 		sleep 0.1s
-		echo "$custom_add" | grep  -q -e "$y" && (pkexec xboxdrv --detach-kernel-driver -s --device-name "Game Pad" --device-by-id "$y" --type xbox360 --deadzone 4000 --dpad-as-button --trigger-as-button --ui-axismap "x2=REL_X:20,y2=REL_Y:20,x1=KEY_A:KEY_D,y1=KEY_W:KEY_S" --ui-buttonmap "tl=KEY_LEFTSHIFT,tr=KEY_LEFTCTRL" --ui-buttonmap "a=KEY_SPACE,b=KEY_C,x=KEY_1,y=KEY_R" --ui-buttonmap "lb=KEY_Q,rb=KEY_E" --ui-buttonmap "lt=BTN_RIGHT,rt=BTN_LEFT" --ui-buttonmap "dl=KEY_4,dr=KEY_B,du=BTN_MIDDLE,dd=KEY_TAB" --ui-buttonmap "back=KEY_ESC,start=KEY_ENTER" &) && echo "$y" >> $mounted_loc && mounted=$(cat $mounted_loc)
+		echo "$custom_add" | grep  -q -e "$y" && (pkexec xboxdrv --detach-kernel-driver -s --device-name "Game Pad" --device-by-id "$y" --type xbox360 --deadzone 4000 --dpad-as-button --trigger-as-button --ui-axismap "$RIGHTANALOG, $LEFTANALOG" --ui-buttonmap "tl=$LEFT_BUT,tr=$RIGHT_BUT" --ui-buttonmap "a=$A_BUT,b=$B_BUT,x=$X_BUT,y=$Y_BUT" --ui-buttonmap "lb=$LEFT_BUMP,rb=$RIGHT_BUMP" --ui-buttonmap "lt=$LEFT_TRIG,rt=$RIGHT_TRIG" --ui-buttonmap "dl=$LEFT,dr=$RIGHT,du=$UP,dd=$DOWN" --ui-buttonmap "back=$BACK_BUT,start=$START_BUT,guide=$HOME_BUT" &) && echo "$y" >> $mounted_loc && mounted=$(cat $mounted_loc)
 	done
 }
 

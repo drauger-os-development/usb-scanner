@@ -20,7 +20,7 @@
 #  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #  MA 02110-1301, USA.
 #
-VERSION="2.8.0"
+VERSION="2.8.2"
 if [ "$1" == "--version" ] || [ "$1" == "-v" ]; then
 	echo -e "\n$VERSION\n"
 	exit 0

@@ -34,6 +34,7 @@ edit="$HOME/.xboxdrv/edit.list"
 #check for layout.conf file
 if [ -f $HOME/.xboxdrv/layout.conf ]; then
 	#parse and load file
+	exit 2
 else
 	#set up default layout
 	LEFTANALOG="x1=KEY_A:KEY_D,y1=KEY_W:KEY_S"

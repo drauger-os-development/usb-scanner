@@ -4,6 +4,7 @@ mounted_loc="$HOME/.xboxdrv/mounted.list"
 mounted=$(cat $mounted_loc)
 custom_add=$(cat "$HOME/.xboxdrv/custom_add.list")
 supported=$(cat "$HOME/.xboxdrv/supported.list")
+edit="$HOME/.xboxdrv/edit.list"
 
 #scan usb devices and get list of Product:Vendor IDs (PVIDs)
 scan () {
@@ -16,32 +17,29 @@ scan () {
 #check $usb against $mounted to ensure nothing that has been mounted once gets mounted again
 check_m () {
 	for y in $usb; do
+		sleep 0.1s
 		echo $mounted | grep  -q -e "$y" && sed -i "/\b\($y\)\b/d" $usb_loc && usb=$(cat $usb_loc)
 	done
 }
 
 support () {
 	for y in $usb; do
-		echo $supported | grep  -q -e "$y" && getpass && (echo "$rpw" | sudo -S xboxdrv --detach-kernel-driver &) && echo "$y" >> $mounted_loc && mounted=$(cat $mounted_loc)
+		sleep 0.1s
+		echo $supported | grep  -q -e "$y" && (pkexec xboxdrv --detach-kernel-driver &) && echo "$y" >> $mounted_loc && mounted=$(cat $mounted_loc)
 	done
-}
-
-getpass () {
-	if [ -z "$rpw"]; then
-		rpw=$(zenity --password)
-	fi
 }
 
 usupport () {
 	for y in $usb; do
-		echo "$custom_add" | grep  -q -e "$y" && getpass && (echo "$rpw" | sudo -S xboxdrv --detach-kernel-driver -s --device-name "Game Pad" --device-by-id "$y" --type xbox360 --deadzone 4000 --dpad-as-button --trigger-as-button --ui-axismap "x2=REL_X:20,y2=REL_Y:20,x1=KEY_A:KEY_D,y1=KEY_W:KEY_S" --ui-buttonmap "tl=KEY_LEFTSHIFT,tr=KEY_LEFTCTRL" --ui-buttonmap "a=KEY_SPACE,b=KEY_C,x=KEY_1,y=KEY_R" --ui-buttonmap "lb=KEY_Q,rb=KEY_E" --ui-buttonmap "lt=BTN_RIGHT,rt=BTN_LEFT" --ui-buttonmap "dl=KEY_4,dr=KEY_B,du=BTN_MIDDLE,dd=KEY_TAB" --ui-buttonmap "back=KEY_ESC,start=KEY_ENTER" &) && echo "$y" >> $mounted_loc && mounted=$(cat $mounted_loc)
+		sleep 0.1s
+		echo "$custom_add" | grep  -q -e "$y" && (pkexec xboxdrv --detach-kernel-driver -s --device-name "Game Pad" --device-by-id "$y" --type xbox360 --deadzone 4000 --dpad-as-button --trigger-as-button --ui-axismap "x2=REL_X:20,y2=REL_Y:20,x1=KEY_A:KEY_D,y1=KEY_W:KEY_S" --ui-buttonmap "tl=KEY_LEFTSHIFT,tr=KEY_LEFTCTRL" --ui-buttonmap "a=KEY_SPACE,b=KEY_C,x=KEY_1,y=KEY_R" --ui-buttonmap "lb=KEY_Q,rb=KEY_E" --ui-buttonmap "lt=BTN_RIGHT,rt=BTN_LEFT" --ui-buttonmap "dl=KEY_4,dr=KEY_B,du=BTN_MIDDLE,dd=KEY_TAB" --ui-buttonmap "back=KEY_ESC,start=KEY_ENTER" &) && echo "$y" >> $mounted_loc && mounted=$(cat $mounted_loc)
 	done
 }
 
 clear_m () {
-	edit="$HOME/.xboxdrv/edit.list"
 	echo "$mounted" >> "$edit"
 	for f in $mounted; do
+		sleep 0.1s
 		(echo "$usb" | grep  -q -e "$f") || sed -i "/\b\($f\)\b/d" $edit
 	done
 	mounted=$(cat $edit)

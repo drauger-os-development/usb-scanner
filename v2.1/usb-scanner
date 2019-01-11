@@ -20,6 +20,11 @@
 #  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #  MA 02110-1301, USA.
 #
+VERSION="2.8.0"
+if [ "$1" == "--version" ] || [ "$1" == "-v" ]; then
+	echo -e "\n$VERSION\n"
+	exit 0
+fi
 usb_loc="$HOME/.xboxdrv/usb.list"
 mounted_loc="$HOME/.xboxdrv/mounted.list"
 mounted=$(cat $mounted_loc)

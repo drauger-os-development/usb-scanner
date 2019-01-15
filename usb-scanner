@@ -20,17 +20,18 @@
 #  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #  MA 02110-1301, USA.
 #
-VERSION="2.8.2"
+VERSION="2.8.3"
 if [ "$1" == "--version" ] || [ "$1" == "-v" ]; then
 	echo -e "\n$VERSION\n"
 	exit 0
 fi
-usb_loc="$HOME/.xboxdrv/usb.list"
-mounted_loc="$HOME/.xboxdrv/mounted.list"
+cache="/lib/usb-scanner"
+usb_loc="$cache/usb.list"
+mounted_loc="$cache/mounted.list"
 mounted=$(cat $mounted_loc)
-custom_add=$(cat "$HOME/.xboxdrv/custom_add.list")
-supported=$(cat "$HOME/.xboxdrv/supported.list")
-edit="$HOME/.xboxdrv/edit.list"
+custom_add=$(cat "$cache/custom_add.list")
+supported=$(cat "$cache/supported.list")
+edit="$cache/edit.list"
 #check for layout.conf file
 if [ -f $HOME/.xboxdrv/layout.conf ]; then
 	#parse and load file

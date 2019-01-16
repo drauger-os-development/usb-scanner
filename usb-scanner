@@ -20,11 +20,8 @@
 #  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #  MA 02110-1301, USA.
 #
+#variable pre-assignment
 VERSION="2.8.3"
-if [ "$1" == "--version" ] || [ "$1" == "-v" ]; then
-	echo -e "\n$VERSION\n"
-	exit 0
-fi
 cache="/lib/usb-scanner"
 usb_loc="$cache/usb.list"
 mounted_loc="$cache/mounted.list"
@@ -32,7 +29,39 @@ mounted=$(cat $mounted_loc)
 custom_add=$(cat "$cache/custom_add.list")
 supported=$(cat "$cache/supported.list")
 edit="$cache/edit.list"
-#check for layout.conf file
+help="usb-scanner, version $VERSION
+
+Options:
+-d, --daemon	Run usb-scanner in the background as a daemon
+-h. --help		Show this help dialogue and exit
+-v, --version	Print current version and exit
+
+usb-scanner is an easy to hack to have more or less performance,
+or to add support for a specific controller
+
+To change it's performance, simply run 'sudo nano /bin/usb-scanner' and
+change the number of 'sleep' commands in the file
+
+To add support (keep in may this may not work for all controllers)
+run 'lsusb' with your controller hooked up, determine which line
+that gets printed out is about your controller, and copy-paste the
+8-digit code with a colon (:) in the middle (including the colon)
+into the file $cache/custom_add.list"
+#Option handling
+if [ "$1" == "--version" ] || [ "$1" == "-v" ]; then
+	echo -e "\n$VERSION\n"
+	exit 0
+elif [ "$1" == "--help" ] || [ "$1" == "-h" ]; then
+	echo -e "\n$help\n"
+	exit 0
+elif [ "$1" == "--daemon" ] || [ "$1" == "-d" ]; then
+	echo -e "\nDaemon Starting . . .\n"
+	usb-scanner &
+	pid="$!"
+	echo -e "\nDaemon Running. Kill it with \'kill $pid\' or \"killall usb-scanner\"\n"
+	exit 0
+fi
+#check for layout.conf file, load default layout if there is none
 if [ -f $HOME/.xboxdrv/layout.conf ]; then
 	#parse and load file
 	exit 2
@@ -60,7 +89,6 @@ else
 	LEFT="KEY_4"
 	RIGHT="KEY_B"
 fi
-
 #scan usb devices and get list of Product:Vendor IDs (PVIDs)
 scan () {
 	sleep 0.1s

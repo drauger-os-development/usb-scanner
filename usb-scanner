@@ -82,6 +82,8 @@ if $(echo "$contents" | grep -q "LEFT_ANALOG"); then
 		else
 			echo "KEY_$x"
 		fi
+	elif [ "$x" == "W:A:S:D" ] || [ "$x" == "w:a:s:d" ]; then
+		echo "KEY_A:KEY_D"
 	elif $(echo "$x" | grep -q '[[:alnum:]]'); then
 		echo "KEY_$x"
 	else
@@ -106,6 +108,8 @@ if $(echo "$contents" | grep -q "LEFT_ANALOG"); then
 		else
 			echo "KEY_$x"
 		fi
+	elif [ "$x" == "W:A:S:D" ] || [ "$x" == "w:a:s:d" ]; then
+		echo "KEY_W:KEY_S"
 	elif $(echo "$x" | grep -q '[[:alnum:]]'); then
 		echo "KEY_$x"
 	else
@@ -130,6 +134,8 @@ if $(echo "$contents" | grep -q "RIGHT_ANALOG"); then
 		else
 			echo "KEY_$x"
 		fi
+	elif [ "$x" == "W:A:S:D" ] || [ "$x" == "w:a:s:d" ]; then
+		echo "KEY_A:KEY_D"
 	elif $(echo "$x" | grep -q '[[:alnum:]]'); then
 		echo "KEY_$x"
 	else
@@ -154,6 +160,8 @@ if $(echo "$contents" | grep -q "RIGHT_ANALOG"); then
 		else
 			echo "KEY_$x"
 		fi
+	elif [ "$x" == "W:A:S:D" ] || [ "$x" == "w:a:s:d" ]; then
+		echo "KEY_W:KEY_S"
 	elif $(echo "$x" | grep -q '[[:alnum:]]'); then
 		echo "KEY_$x"
 	else
@@ -259,9 +267,9 @@ else
 	echo "void"
 fi)
 	RIGHT_TRIG=$(
-if $(echo "$contents" | grep -q "RIGHT_TRIG"); then
-	x=$(echo "$contents" | grep "RIGHT_TRIG")
-	x=$(echo "$x" | sed 's/RIGHT_TRIG=//g')
+if $(echo "$contents" | grep -q "RIGHT_TRIGGER"); then
+	x=$(echo "$contents" | grep "RIGHT_TRIGGER")
+	x=$(echo "$x" | sed 's/RIGHT_TRIGGER=//g')
 	if [ "$x" == "void" ] || [ "$x" == "null" ] || [ "$x" == " " ]; then
 		echo "void"
 	elif [ "$x" == "MOUSE" ] || [ "$x" == "mouse" ]; then
@@ -283,9 +291,9 @@ else
 	echo "void"
 fi)
 	LEFT_TRIG=$(
-if $(echo "$contents" | grep -q "LEFT_TRIG"); then
-	x=$(echo "$contents" | grep "LEFT_TRIG")
-	x=$(echo "$x" | sed 's/LEFT_TRIG=//g')
+if $(echo "$contents" | grep -q "LEFT_TRIGGER"); then
+	x=$(echo "$contents" | grep "LEFT_TRIGGER")
+	x=$(echo "$x" | sed 's/LEFT_TRIGGER=//g')
 	if [ "$x" == "void" ] || [ "$x" == "null" ] || [ "$x" == " " ]; then
 		echo "void"
 	elif [ "$x" == "MOUSE" ] || [ "$x" == "mouse" ]; then
@@ -453,7 +461,7 @@ fi)
 	BACK_BUT=$(
 if $(echo "$contents" | grep -q "BACK"); then
 	x=$(echo "$contents" | grep "BACK")
-	x=$(echo "$x" | sed 's/MENU=//g')
+	x=$(echo "$x" | sed 's/BACK=//g')
 	if [ "$x" == "void" ] || [ "$x" == "null" ] || [ "$x" == " " ]; then
 		echo "void"
 	elif [ "$x" == "MOUSE" ] || [ "$x" == "mouse" ]; then

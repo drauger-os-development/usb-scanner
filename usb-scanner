@@ -82,7 +82,7 @@ if $(echo "$contents" | grep -q "LEFT_ANALOG"); then
 		else
 			echo "KEY_$x"
 		fi
-	elif $(echo "$x" | grep -q '[:alnum:]'); then
+	elif $(echo "$x" | grep -q '[[:alnum:]]'); then
 		echo "KEY_$x"
 	else
 		echo "void"
@@ -106,7 +106,7 @@ if $(echo "$contents" | grep -q "LEFT_ANALOG"); then
 		else
 			echo "KEY_$x"
 		fi
-	elif $(echo "$x" | grep -q '[:alnum:]'); then
+	elif $(echo "$x" | grep -q '[[:alnum:]]'); then
 		echo "KEY_$x"
 	else
 		echo "void"
@@ -130,7 +130,7 @@ if $(echo "$contents" | grep -q "RIGHT_ANALOG"); then
 		else
 			echo "KEY_$x"
 		fi
-	elif $(echo "$x" | grep -q '[:alnum:]'); then
+	elif $(echo "$x" | grep -q '[[:alnum:]]'); then
 		echo "KEY_$x"
 	else
 		echo "void"
@@ -154,7 +154,7 @@ if $(echo "$contents" | grep -q "RIGHT_ANALOG"); then
 		else
 			echo "KEY_$x"
 		fi
-	elif $(echo "$x" | grep -q '[:alnum:]'); then
+	elif $(echo "$x" | grep -q '[[:alnum:]]'); then
 		echo "KEY_$x"
 	else
 		echo "void"
@@ -178,7 +178,7 @@ if $(echo "$contents" | grep -q "LEFT_STICK_BUTTON"); then
 		else
 			echo "KEY_$x"
 		fi
-	elif $(echo "$x" | grep -q '[:alnum:]'); then
+	elif $(echo "$x" | grep -q '[[:alnum:]]'); then
 		echo "KEY_$x"
 	else
 		echo "void"
@@ -202,7 +202,7 @@ if $(echo "$contents" | grep -q "RIGHT_STICK_BUTTON"); then
 		else
 			echo "KEY_$x"
 		fi
-	elif $(echo "$x" | grep -q '[:alnum:]'); then
+	elif $(echo "$x" | grep -q '[[:alnum:]]'); then
 		echo "KEY_$x"
 	else
 		echo "void"
@@ -226,7 +226,7 @@ if $(echo "$contents" | grep -q "RIGHT_BUMPER"); then
 		else
 			echo "KEY_$x"
 		fi
-	elif $(echo "$x" | grep -q '[:alnum:]'); then
+	elif $(echo "$x" | grep -q '[[:alnum:]]'); then
 		echo "KEY_$x"
 	else
 		echo "void"
@@ -250,7 +250,7 @@ if $(echo "$contents" | grep -q "LEFT_BUMPER"); then
 		else
 			echo "KEY_$x"
 		fi
-	elif $(echo "$x" | grep -q '[:alnum:]'); then
+	elif $(echo "$x" | grep -q '[[:alnum:]]'); then
 		echo "KEY_$x"
 	else
 		echo "void"
@@ -274,7 +274,7 @@ if $(echo "$contents" | grep -q "RIGHT_TRIG"); then
 		else
 			echo "KEY_$x"
 		fi
-	elif $(echo "$x" | grep -q '[:alnum:]'); then
+	elif $(echo "$x" | grep -q '[[:alnum:]]'); then
 		echo "KEY_$x"
 	else
 		echo "void"
@@ -298,7 +298,7 @@ if $(echo "$contents" | grep -q "LEFT_TRIG"); then
 		else
 			echo "KEY_$x"
 		fi
-	elif $(echo "$x" | grep -q '[:alnum:]'); then
+	elif $(echo "$x" | grep -q '[[:alnum:]]'); then
 		echo "KEY_$x"
 	else
 		echo "void"
@@ -322,7 +322,7 @@ if $(echo "$contents" | grep -q "A="); then
 		else
 			echo "KEY_$x"
 		fi
-	elif $(echo "$x" | grep -q '[:alnum:]'); then
+	elif $(echo "$x" | grep -q '[[:alnum:]]'); then
 		echo "KEY_$x"
 	else
 		echo "void"
@@ -346,7 +346,7 @@ if $(echo "$contents" | grep -q "B="); then
 		else
 			echo "KEY_$x"
 		fi
-	elif $(echo "$x" | grep -q '[:alnum:]'); then
+	elif $(echo "$x" | grep -q '[[:alnum:]]'); then
 		echo "KEY_$x"
 	else
 		echo "void"
@@ -370,7 +370,7 @@ if $(echo "$contents" | grep -q "X="); then
 		else
 			echo "KEY_$x"
 		fi
-	elif $(echo "$x" | grep -q '[:alnum:]'); then
+	elif $(echo "$x" | grep -q '[[:alnum:]]'); then
 		echo "KEY_$x"
 	else
 		echo "void"
@@ -394,7 +394,7 @@ if $(echo "$contents" | grep -q "Y="); then
 		else
 			echo "KEY_$x"
 		fi
-	elif $(echo "$x" | grep -q '[:alnum:]'); then
+	elif $(echo "$x" | grep -q '[[:alnum:]]'); then
 		echo "KEY_$x"
 	else
 		echo "void"
@@ -418,7 +418,7 @@ if $(echo "$contents" | grep -q "MENU"); then
 		else
 			echo "KEY_$x"
 		fi
-	elif $(echo "$x" | grep -q '[:alnum:]'); then
+	elif $(echo "$x" | grep -q '[[:alnum:]]'); then
 		echo "KEY_$x"
 	else
 		echo "void"
@@ -442,7 +442,7 @@ if $(echo "$contents" | grep -q "START"); then
 		else
 			echo "KEY_$x"
 		fi
-	elif $(echo "$x" | grep -q '[:alnum:]'); then
+	elif $(echo "$x" | grep -q '[[:alnum:]]'); then
 		echo "KEY_$x"
 	else
 		echo "void"
@@ -466,7 +466,7 @@ if $(echo "$contents" | grep -q "BACK"); then
 		else
 			echo "KEY_$x"
 		fi
-	elif $(echo "$x" | grep -q '[:alnum:]'); then
+	elif $(echo "$x" | grep -q '[[:alnum:]]'); then
 		echo "KEY_$x"
 	else
 		echo "void"
@@ -490,7 +490,7 @@ if $(echo "$contents" | grep -q "UP"); then
 		else
 			echo "KEY_$x"
 		fi
-	elif $(echo "$x" | grep -q '[:alnum:]'); then
+	elif $(echo "$x" | grep -q '[[:alnum:]]'); then
 		echo "KEY_$x"
 	else
 		echo "void"
@@ -514,7 +514,7 @@ if $(echo "$contents" | grep -q "DOWN"); then
 		else
 			echo "KEY_$x"
 		fi
-	elif $(echo "$x" | grep -q '[:alnum:]'); then
+	elif $(echo "$x" | grep -q '[[:alnum:]]'); then
 		echo "KEY_$x"
 	else
 		echo "void"
@@ -538,7 +538,7 @@ if $(echo "$contents" | grep -q "LEFT="); then
 		else
 			echo "KEY_$x"
 		fi
-	elif $(echo "$x" | grep -q '[:alnum:]'); then
+	elif $(echo "$x" | grep -q '[[:alnum:]]'); then
 		echo "KEY_$x"
 	else
 		echo "void"
@@ -562,7 +562,7 @@ if $(echo "$contents" | grep -q "RIGHT="); then
 		else
 			echo "KEY_$x"
 		fi
-	elif $(echo "$x" | grep -q '[:alnum:]'); then
+	elif $(echo "$x" | grep -q '[[:alnum:]]'); then
 		echo "KEY_$x"
 	else
 		echo "void"

@@ -64,7 +64,6 @@ fi
 #check for layout.conf file, load default layout if there is none
 if [ -f $HOME/.xboxdrv/layout.conf ]; then
 	#parse and load file
-	echo "Parsing . . ."
 	contents=$(cat $HOME/.xboxdrv/layout.conf)
 	LEFTANALOG_X=$(
 if $(echo "$contents" | grep -q "LEFT_ANALOG"); then
@@ -578,29 +577,6 @@ if $(echo "$contents" | grep -q "RIGHT="); then
 else
 	echo "void"
 fi)
-	echo "Parsing Complete."
-	echo "LEFTANALOG_X=$LEFTANALOG_X
-LEFTANALOG_Y=$LEFTANALOG_Y
-RIGHTANALOG_X=$RIGHTANALOG_X
-RIGHTANALOG_Y=$RIGHTANALOG_Y
-LEFT_BUT=$LEFT_BUT
-RIGHT_BUT=$RIGHT_BUT
-LEFT_BUMP=$LEFT_BUMP
-RIGHT_BUMP=$RIGHT_BUMP
-LEFT_TRIG=$LEFT_TRIG
-RIGHT_TRIG=$RIGHT_TRIG
-A_BUT=$A_BUT
-B_BUT=$B_BUT
-X_BUT=$X_BUT
-Y_BUT=$Y_BUT
-HOME_BUT=$HOME_BUT
-START_BUT=$START_BUT
-BACK_BUT=$BACK_BUT
-UP=$UP
-DOWN=$DOWN
-LEFT=$LEFT
-RIGHT=$RIGHT"
-	exit 0
 else
 	#set up default layout
 	LEFTANALOG_X="KEY_A:KEY_D"

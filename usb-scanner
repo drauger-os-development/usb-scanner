@@ -89,12 +89,9 @@ else
 	LEFT="KEY_4"
 	RIGHT="KEY_B"
 fi
-#<<<<<<< reorganize
 inf=1
 while [ "$inf" == "1" ]; do
-#=======
 #scan usb devices and get list of Product:Vendor IDs (PVIDs)
-#>>>>>>> master
 	sleep 0.1s
 	#gain VID/PID
 	usb=$(lsusb | sed -e 's/.*ID \([a-f0-9]\+:[a-f0-9]\+\).*/\1/g')

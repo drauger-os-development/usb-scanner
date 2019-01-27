@@ -89,55 +89,48 @@ else
 	LEFT="KEY_4"
 	RIGHT="KEY_B"
 fi
+#<<<<<<< reorganize
+inf=1
+while [ "$inf" == "1" ]; do
+#=======
 #scan usb devices and get list of Product:Vendor IDs (PVIDs)
-scan () {
+#>>>>>>> master
 	sleep 0.1s
+	#gain VID/PID
 	usb=$(lsusb | sed -e 's/.*ID \([a-f0-9]\+:[a-f0-9]\+\).*/\1/g')
 	rm $usb_loc
+	#current USB state
 	echo "$usb" >> $usb_loc
-}
-
-#check $usb against $mounted to ensure nothing that has been mounted once gets mounted again
-check_m () {
+	#check to see if any of them are already mounted
 	for y in $usb; do
 		sleep 0.1s
 		echo $mounted | grep  -q -e "$y" && sed -i "/\b\($y\)\b/d" $usb_loc && usb=$(cat $usb_loc)
 	done
-}
-
-support () {
-	for y in $usb; do
-		sleep 0.1s
-		echo $supported | grep  -q -e "$y" && (pkexec xboxdrv --detach-kernel-driver &) && echo "$y" >> $mounted_loc && mounted=$(cat $mounted_loc)
-	done
-}
-
-usupport () {
-	for y in $usb; do
-		sleep 0.1s
-		echo "$custom_add" | grep  -q -e "$y" && (pkexec xboxdrv --detach-kernel-driver -s --device-name "Game Pad" --device-by-id "$y" --type xbox360 --deadzone 4000 --dpad-as-button --trigger-as-button --ui-axismap "x2=$RIGHTANALOG_X,y2=$RIGHTANALOG_Y,x1=$LEFTANALOG_X,y1=$LEFTANALOG_Y" --ui-buttonmap "tl=$LEFT_BUT,tr=$RIGHT_BUT" --ui-buttonmap "a=$A_BUT,b=$B_BUT,x=$X_BUT,y=$Y_BUT" --ui-buttonmap "lb=$LEFT_BUMP,rb=$RIGHT_BUMP" --ui-buttonmap "lt=$LEFT_TRIG,rt=$RIGHT_TRIG" --ui-buttonmap "dl=$LEFT,dr=$RIGHT,du=$UP,dd=$DOWN" --ui-buttonmap "back=$BACK_BUT,start=$START_BUT,guide=$HOME_BUT" &) && echo "$y" >> $mounted_loc && mounted=$(cat $mounted_loc)
-	done
-}
-
-clear_m () {
+	{
+		#check for typical support from xboxdrv and mount the countroller in that manner if it is supported
+		for y in $usb; do
+			sleep 0.1s
+			echo $supported | grep  -q -e "$y" && (pkexec xboxdrv --detach-kernel-driver &) && echo "$y" >> $mounted_loc && mounted=$(cat $mounted_loc)
+		done
+	} || {
+		#if the above method fails, attempt the custom method (mapping the controller keys to keyboard keys so it basicly emulates a keyboard)
+		for y in $usb; do
+			sleep 0.1s
+			echo "$custom_add" | grep  -q -e "$y" && (pkexec xboxdrv --detach-kernel-driver -s --device-name "Game Pad" --device-by-id "$y" --type xbox360 --deadzone 4000 --dpad-as-button --trigger-as-button --ui-axismap "x2=$RIGHTANALOG_X,y2=$RIGHTANALOG_Y,x1=$LEFTANALOG_X,y1=$LEFTANALOG_Y" --ui-buttonmap "tl=$LEFT_BUT,tr=$RIGHT_BUT" --ui-buttonmap "a=$A_BUT,b=$B_BUT,x=$X_BUT,y=$Y_BUT" --ui-buttonmap "lb=$LEFT_BUMP,rb=$RIGHT_BUMP" --ui-buttonmap "lt=$LEFT_TRIG,rt=$RIGHT_TRIG" --ui-buttonmap "dl=$LEFT,dr=$RIGHT,du=$UP,dd=$DOWN" --ui-buttonmap "back=$BACK_BUT,start=$START_BUT,guide=$HOME_BUT" &) && echo "$y" >> $mounted_loc && mounted=$(cat $mounted_loc)
+		done
+	} || {
+		#clear it's sort of cache on the internal drive
+		rm $mounted_loc
+		echo "0000:0000" >> $mounted_loc
+	}
+	#modify the running log of what is mounted
 	echo "$mounted" >> "$edit"
 	for f in $mounted; do
 		sleep 0.1s
 		(echo "$usb" | grep  -q -e "$f") || sed -i "/\b\($f\)\b/d" $edit
 	done
+	#update the log in memory
 	mounted=$(cat $edit)
+	#clear out needless olf files
 	rm "$edit"
-}
-
-clear_m_total () {
-	rm $mounted_loc
-	echo "0000:0000" >> $mounted_loc
-}
-
-inf=1
-while [ "$inf" == "1" ]; do
-	scan
-	check_m
-	support || usupport || clear_m_total
-	clear_m
 done

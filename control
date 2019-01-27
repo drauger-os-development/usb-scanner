@@ -1,9 +1,10 @@
 Package: usb-scanner
-Version: 2.8.3
+Version: 2.8.4
 Maintainer: Thomas Castleman <draugeros@gmail.com>
 Section: misc
 Homepage: https://github.com/Batcastle/usb-scanner
 Architecture: all
 Priority: standard
+Depends: xboxdrv (>=0.8.8-1), usbutils (>=1:007-4build1)
 Description: Custom xboxdrv daemon
  Special xboxdrv daemon that adds support for more controllers, implements auto-mounting, and the ability to add support in an easy, simple manner

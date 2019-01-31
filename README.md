@@ -4,18 +4,15 @@ Custom xboxdrv daemon which allows for improved support and auto-mounting of Xbo
 File structure:
 ```
 /
-└───home
-    └─── (user's home directory)
-          └───.xboxdrv
-               |   custom_add.list
-               |   mounted.list
-               └───supported.list
+└───lib
+    └───usb-scanner
+          |   custom_add.list
+          |   mounted.list
+          └───supported.list
 
 /
 └───bin
      └───usb-scanner
 ```
 
-The folder `v2.1` has the current release of usb-scanner in it, this version is working, but has bugs.
-
-The folder `v3.1` has the version under development of usb-scanner in it. This version is not yet working.
+You can also add a file to `$HOME/.xbodrv` named `layout.conf` with a specific format to specify a specific layout you want your controllers yon follow. For how to format this file, see the `usb-scanner` man page.

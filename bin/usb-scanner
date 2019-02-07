@@ -21,13 +21,13 @@
 #  MA 02110-1301, USA.
 #
 #variable pre-assignment
-VERSION="2.9.0"
+VERSION="2.9.1"
 cache="/lib/usb-scanner"
 usb_loc="$cache/usb.list"
 mounted_loc="$cache/mounted.list"
-mounted=$(cat $mounted_loc)
-custom_add=$(cat "$cache/custom_add.list")
-supported=$(cat "$cache/supported.list")
+mounted=$(/bin/cat $mounted_loc)
+custom_add=$(/bin/cat "$cache/custom_add.list")
+supported=$(/bin/cat "$cache/supported.list")
 edit="$cache/edit.list"
 help="usb-scanner, version $VERSION
 
@@ -40,7 +40,7 @@ usb-scanner is an easy to hack to have more or less performance,
 or to add support for a specific controller
 
 To change it's performance, simply run 'sudo nano /bin/usb-scanner' and
-change the number of 'sleep' commands in the file
+change the number of '/bin/sleep' commands in the file
 
 To add support (keep in may this may not work for all controllers)
 run 'lsusb' with your controller hooked up, determine which line
@@ -49,533 +49,533 @@ that gets printed out is about your controller, and copy-paste the
 into the file $cache/custom_add.list"
 #Option handling
 if [ "$1" == "--version" ] || [ "$1" == "-v" ]; then
-	echo -e "\n$VERSION\n"
+	/bin/echo -e "\n$VERSION\n"
 	exit 0
 elif [ "$1" == "--help" ] || [ "$1" == "-h" ]; then
-	echo -e "\n$help\n"
+	/bin/echo -e "\n$help\n"
 	exit 0
 elif [ "$1" == "--daemon" ] || [ "$1" == "-d" ]; then
-	echo -e "\nDaemon Starting . . .\n"
+	/bin/echo -e "\nDaemon Starting . . .\n"
 	usb-scanner &
 	pid="$!"
-	echo -e "\nDaemon Running. Kill it with \'kill $pid\' or \"killall usb-scanner\"\n"
+	/bin/echo -e "\nDaemon Running. Kill it with \'kill $pid\' or \"killall usb-scanner\"\n"
 	exit 0
 fi
 #check for layout.conf file, load default layout if there is none
 if [ -f $HOME/.xboxdrv/layout.conf ]; then
 	#parse and load file
-	contents=$(cat $HOME/.xboxdrv/layout.conf)
+	contents=$(/bin/cat $HOME/.xboxdrv/layout.conf)
 	LEFTANALOG_X=$(
-if $(echo "$contents" | grep -q "LEFT_ANALOG"); then
-	x=$(echo "$contents" | grep "LEFT_ANALOG")
-	x=$(echo "$x" | sed 's/LEFT_ANALOG=//g')
+if $(/bin/echo "$contents" | /bin/grep -q "LEFT_ANALOG"); then
+	x=$(/bin/echo "$contents" | /bin/grep "LEFT_ANALOG")
+	x=$(/bin/echo "$x" | /bin/sed 's/LEFT_ANALOG=//g')
 	if [ "$x" == "void" ] || [ "$x" == "null" ] || [ "$x" == " " ]; then
-		echo "void"
+		/bin/echo "void"
 	elif [ "$x" == "MOUSE" ] || [ "$x" == "mouse" ]; then
-		echo "REL_X:20"
-	elif $( echo "$x" | grep -q "CLICK_"); then
-		echo "$x" | sed 's/CLICK_/BTN_/g'
+		/bin/echo "REL_X:20"
+	elif $( /bin/echo "$x" | /bin/grep -q "CLICK_"); then
+		/bin/echo "$x" | /bin/sed 's/CLICK_/BTN_/g'
 	elif [ "$x" == "TAB" ] || [ "$x" == "SHIFT" ] || [ "$x" == "CTRL" ] || [ "$x" == "ALT" ] || [ "$x" == "ESC" ]; then
 		if [ "$x" == "SHIFT" ] || [ "$x" == "CTRL" ] || [ "$x" == "ALT" ]; then
-			echo "KEY_LEFT$x"
+			/bin/echo "KEY_LEFT$x"
 		else
-			echo "KEY_$x"
+			/bin/echo "KEY_$x"
 		fi
 	elif [ "$x" == "W:A:S:D" ] || [ "$x" == "w:a:s:d" ]; then
-		echo "KEY_A:KEY_D"
-	elif $(echo "$x" | grep -q '[[:alnum:]]'); then
-		echo "KEY_$x"
+		/bin/echo "KEY_A:KEY_D"
+	elif $(/bin/echo "$x" | /bin/grep -q '[[:alnum:]]'); then
+		/bin/echo "KEY_$x"
 	else
-		echo "void"
+		/bin/echo "void"
 	fi
 else
-	echo "void"
+	/bin/echo "void"
 fi)
 	LEFTANALOG_Y=$(
-if $(echo "$contents" | grep -q "LEFT_ANALOG"); then
-	x=$(echo "$contents" | grep "LEFT_ANALOG")
-	x=$(echo "$x" | sed 's/LEFT_ANALOG=//g')
+if $(/bin/echo "$contents" | /bin/grep -q "LEFT_ANALOG"); then
+	x=$(/bin/echo "$contents" | /bin/grep "LEFT_ANALOG")
+	x=$(/bin/echo "$x" | /bin/sed 's/LEFT_ANALOG=//g')
 	if [ "$x" == "void" ] || [ "$x" == "null" ] || [ "$x" == " " ]; then
-		echo "void"
+		/bin/echo "void"
 	elif [ "$x" == "MOUSE" ] || [ "$x" == "mouse" ]; then
-		echo "REL_Y:20"
-	elif $( echo "$x" | grep -q "CLICK_"); then
-		echo "$x" | sed 's/CLICK_/BTN_/g'
+		/bin/echo "REL_Y:20"
+	elif $( /bin/echo "$x" | /bin/grep -q "CLICK_"); then
+		/bin/echo "$x" | /bin/sed 's/CLICK_/BTN_/g'
 	elif [ "$x" == "TAB" ] || [ "$x" == "SHIFT" ] || [ "$x" == "CTRL" ] || [ "$x" == "ALT" ] || [ "$x" == "ESC" ]; then
 		if [ "$x" == "SHIFT" ] || [ "$x" == "CTRL" ] || [ "$x" == "ALT" ]; then
-			echo "KEY_LEFT$x"
+			/bin/echo "KEY_LEFT$x"
 		else
-			echo "KEY_$x"
+			/bin/echo "KEY_$x"
 		fi
 	elif [ "$x" == "W:A:S:D" ] || [ "$x" == "w:a:s:d" ]; then
-		echo "KEY_W:KEY_S"
-	elif $(echo "$x" | grep -q '[[:alnum:]]'); then
-		echo "KEY_$x"
+		/bin/echo "KEY_W:KEY_S"
+	elif $(/bin/echo "$x" | /bin/grep -q '[[:alnum:]]'); then
+		/bin/echo "KEY_$x"
 	else
-		echo "void"
+		/bin/echo "void"
 	fi
 else
-	echo "void"
+	/bin/echo "void"
 fi)
 	RIGHTANALOG_X=$(
-if $(echo "$contents" | grep -q "RIGHT_ANALOG"); then
-	x=$(echo "$contents" | grep "RIGHT_ANALOG")
-	x=$(echo "$x" | sed 's/RIGHT_ANALOG=//g')
+if $(/bin/echo "$contents" | /bin/grep -q "RIGHT_ANALOG"); then
+	x=$(/bin/echo "$contents" | /bin/grep "RIGHT_ANALOG")
+	x=$(/bin/echo "$x" | /bin/sed 's/RIGHT_ANALOG=//g')
 	if [ "$x" == "void" ] || [ "$x" == "null" ] || [ "$x" == " " ]; then
-		echo "void"
+		/bin/echo "void"
 	elif [ "$x" == "MOUSE" ] || [ "$x" == "mouse" ]; then
-		echo "REL_X:20"
-	elif $( echo "$x" | grep -q "CLICK_"); then
-		echo "$x" | sed 's/CLICK_/BTN_/g'
+		/bin/echo "REL_X:20"
+	elif $( /bin/echo "$x" | /bin/grep -q "CLICK_"); then
+		/bin/echo "$x" | /bin/sed 's/CLICK_/BTN_/g'
 	elif [ "$x" == "TAB" ] || [ "$x" == "SHIFT" ] || [ "$x" == "CTRL" ] || [ "$x" == "ALT" ] || [ "$x" == "ESC" ]; then
 		if [ "$x" == "SHIFT" ] || [ "$x" == "CTRL" ] || [ "$x" == "ALT" ]; then
-			echo "KEY_LEFT$x"
+			/bin/echo "KEY_LEFT$x"
 		else
-			echo "KEY_$x"
+			/bin/echo "KEY_$x"
 		fi
 	elif [ "$x" == "W:A:S:D" ] || [ "$x" == "w:a:s:d" ]; then
-		echo "KEY_A:KEY_D"
-	elif $(echo "$x" | grep -q '[[:alnum:]]'); then
-		echo "KEY_$x"
+		/bin/echo "KEY_A:KEY_D"
+	elif $(/bin/echo "$x" | /bin/grep -q '[[:alnum:]]'); then
+		/bin/echo "KEY_$x"
 	else
-		echo "void"
+		/bin/echo "void"
 	fi
 else
-	echo "void"
+	/bin/echo "void"
 fi)
 	RIGHTANALOG_Y=$(
-if $(echo "$contents" | grep -q "RIGHT_ANALOG"); then
-	x=$(echo "$contents" | grep "RIGHT_ANALOG")
-	x=$(echo "$x" | sed 's/RIGHT_ANALOG=//g')
+if $(/bin/echo "$contents" | /bin/grep -q "RIGHT_ANALOG"); then
+	x=$(/bin/echo "$contents" | /bin/grep "RIGHT_ANALOG")
+	x=$(/bin/echo "$x" | /bin/sed 's/RIGHT_ANALOG=//g')
 	if [ "$x" == "void" ] || [ "$x" == "null" ] || [ "$x" == " " ]; then
-		echo "void"
+		/bin/echo "void"
 	elif [ "$x" == "MOUSE" ] || [ "$x" == "mouse" ]; then
-		echo "REL_Y:20"
-	elif $( echo "$x" | grep -q "CLICK_"); then
-		echo "$x" | sed 's/CLICK_/BTN_/g'
+		/bin/echo "REL_Y:20"
+	elif $( /bin/echo "$x" | /bin/grep -q "CLICK_"); then
+		/bin/echo "$x" | /bin/sed 's/CLICK_/BTN_/g'
 	elif [ "$x" == "TAB" ] || [ "$x" == "SHIFT" ] || [ "$x" == "CTRL" ] || [ "$x" == "ALT" ] || [ "$x" == "ESC" ]; then
 		if [ "$x" == "SHIFT" ] || [ "$x" == "CTRL" ] || [ "$x" == "ALT" ]; then
-			echo "KEY_LEFT$x"
+			/bin/echo "KEY_LEFT$x"
 		else
-			echo "KEY_$x"
+			/bin/echo "KEY_$x"
 		fi
 	elif [ "$x" == "W:A:S:D" ] || [ "$x" == "w:a:s:d" ]; then
-		echo "KEY_W:KEY_S"
-	elif $(echo "$x" | grep -q '[[:alnum:]]'); then
-		echo "KEY_$x"
+		/bin/echo "KEY_W:KEY_S"
+	elif $(/bin/echo "$x" | /bin/grep -q '[[:alnum:]]'); then
+		/bin/echo "KEY_$x"
 	else
-		echo "void"
+		/bin/echo "void"
 	fi
 else
-	echo "void"
+	/bin/echo "void"
 fi)
 	LEFT_BUT=$(
-if $(echo "$contents" | grep -q "LEFT_STICK_BUTTON"); then
-	x=$(echo "$contents" | grep "LEFT_STICK_BUTTON")
-	x=$(echo "$x" | sed 's/LEFT_STICK_BUTTON=//g')
+if $(/bin/echo "$contents" | /bin/grep -q "LEFT_STICK_BUTTON"); then
+	x=$(/bin/echo "$contents" | /bin/grep "LEFT_STICK_BUTTON")
+	x=$(/bin/echo "$x" | /bin/sed 's/LEFT_STICK_BUTTON=//g')
 	if [ "$x" == "void" ] || [ "$x" == "null" ] || [ "$x" == " " ]; then
-		echo "void"
+		/bin/echo "void"
 	elif [ "$x" == "MOUSE" ] || [ "$x" == "mouse" ]; then
-		echo "REL_X:20"
-	elif $( echo "$x" | grep -q "CLICK_"); then
-		echo "$x" | sed 's/CLICK_/BTN_/g'
+		/bin/echo "REL_X:20"
+	elif $( /bin/echo "$x" | /bin/grep -q "CLICK_"); then
+		/bin/echo "$x" | /bin/sed 's/CLICK_/BTN_/g'
 	elif [ "$x" == "TAB" ] || [ "$x" == "SHIFT" ] || [ "$x" == "CTRL" ] || [ "$x" == "ALT" ] || [ "$x" == "ESC" ]; then
 		if [ "$x" == "SHIFT" ] || [ "$x" == "CTRL" ] || [ "$x" == "ALT" ]; then
-			echo "KEY_LEFT$x"
+			/bin/echo "KEY_LEFT$x"
 		else
-			echo "KEY_$x"
+			/bin/echo "KEY_$x"
 		fi
-	elif $(echo "$x" | grep -q '[[:alnum:]]'); then
-		echo "KEY_$x"
+	elif $(/bin/echo "$x" | /bin/grep -q '[[:alnum:]]'); then
+		/bin/echo "KEY_$x"
 	else
-		echo "void"
+		/bin/echo "void"
 	fi
 else
-	echo "void"
+	/bin/echo "void"
 fi)
 	RIGHT_BUT=$(
-if $(echo "$contents" | grep -q "RIGHT_STICK_BUTTON"); then
-	x=$(echo "$contents" | grep "RIGHT_STICK_BUTTON")
-	x=$(echo "$x" | sed 's/RIGHT_STICK_BUTTON=//g')
+if $(/bin/echo "$contents" | /bin/grep -q "RIGHT_STICK_BUTTON"); then
+	x=$(/bin/echo "$contents" | /bin/grep "RIGHT_STICK_BUTTON")
+	x=$(/bin/echo "$x" | /bin/sed 's/RIGHT_STICK_BUTTON=//g')
 	if [ "$x" == "void" ] || [ "$x" == "null" ] || [ "$x" == " " ]; then
-		echo "void"
+		/bin/echo "void"
 	elif [ "$x" == "MOUSE" ] || [ "$x" == "mouse" ]; then
-		echo "REL_X:20"
-	elif $( echo "$x" | grep -q "CLICK_"); then
-		echo "$x" | sed 's/CLICK_/BTN_/g'
+		/bin/echo "REL_X:20"
+	elif $( /bin/echo "$x" | /bin/grep -q "CLICK_"); then
+		/bin/echo "$x" | /bin/sed 's/CLICK_/BTN_/g'
 	elif [ "$x" == "TAB" ] || [ "$x" == "SHIFT" ] || [ "$x" == "CTRL" ] || [ "$x" == "ALT" ] || [ "$x" == "ESC" ]; then
 		if [ "$x" == "SHIFT" ] || [ "$x" == "CTRL" ] || [ "$x" == "ALT" ]; then
-			echo "KEY_LEFT$x"
+			/bin/echo "KEY_LEFT$x"
 		else
-			echo "KEY_$x"
+			/bin/echo "KEY_$x"
 		fi
-	elif $(echo "$x" | grep -q '[[:alnum:]]'); then
-		echo "KEY_$x"
+	elif $(/bin/echo "$x" | /bin/grep -q '[[:alnum:]]'); then
+		/bin/echo "KEY_$x"
 	else
-		echo "void"
+		/bin/echo "void"
 	fi
 else
-	echo "void"
+	/bin/echo "void"
 fi)
 	RIGHT_BUMP=$(
-if $(echo "$contents" | grep -q "RIGHT_BUMPER"); then
-	x=$(echo "$contents" | grep "RIGHT_BUMPER")
-	x=$(echo "$x" | sed 's/RIGHT_BUMPER=//g')
+if $(/bin/echo "$contents" | /bin/grep -q "RIGHT_BUMPER"); then
+	x=$(/bin/echo "$contents" | /bin/grep "RIGHT_BUMPER")
+	x=$(/bin/echo "$x" | /bin/sed 's/RIGHT_BUMPER=//g')
 	if [ "$x" == "void" ] || [ "$x" == "null" ] || [ "$x" == " " ]; then
-		echo "void"
+		/bin/echo "void"
 	elif [ "$x" == "MOUSE" ] || [ "$x" == "mouse" ]; then
-		echo "REL_X:20"
-	elif $( echo "$x" | grep -q "CLICK_"); then
-		echo "$x" | sed 's/CLICK_/BTN_/g'
+		/bin/echo "REL_X:20"
+	elif $( /bin/echo "$x" | /bin/grep -q "CLICK_"); then
+		/bin/echo "$x" | /bin/sed 's/CLICK_/BTN_/g'
 	elif [ "$x" == "TAB" ] || [ "$x" == "SHIFT" ] || [ "$x" == "CTRL" ] || [ "$x" == "ALT" ] || [ "$x" == "ESC" ]; then
 		if [ "$x" == "SHIFT" ] || [ "$x" == "CTRL" ] || [ "$x" == "ALT" ]; then
-			echo "KEY_LEFT$x"
+			/bin/echo "KEY_LEFT$x"
 		else
-			echo "KEY_$x"
+			/bin/echo "KEY_$x"
 		fi
-	elif $(echo "$x" | grep -q '[[:alnum:]]'); then
-		echo "KEY_$x"
+	elif $(/bin/echo "$x" | /bin/grep -q '[[:alnum:]]'); then
+		/bin/echo "KEY_$x"
 	else
-		echo "void"
+		/bin/echo "void"
 	fi
 else
-	echo "void"
+	/bin/echo "void"
 fi)
 	LEFT_BUMP=$(
-if $(echo "$contents" | grep -q "LEFT_BUMPER"); then
-	x=$(echo "$contents" | grep "LEFT_BUMPER")
-	x=$(echo "$x" | sed 's/LEFT_BUMPER=//g')
+if $(/bin/echo "$contents" | /bin/grep -q "LEFT_BUMPER"); then
+	x=$(/bin/echo "$contents" | /bin/grep "LEFT_BUMPER")
+	x=$(/bin/echo "$x" | /bin/sed 's/LEFT_BUMPER=//g')
 	if [ "$x" == "void" ] || [ "$x" == "null" ] || [ "$x" == " " ]; then
-		echo "void"
+		/bin/echo "void"
 	elif [ "$x" == "MOUSE" ] || [ "$x" == "mouse" ]; then
-		echo "REL_X:20"
-	elif $( echo "$x" | grep -q "CLICK_"); then
-		echo "$x" | sed 's/CLICK_/BTN_/g'
+		/bin/echo "REL_X:20"
+	elif $( /bin/echo "$x" | /bin/grep -q "CLICK_"); then
+		/bin/echo "$x" | /bin/sed 's/CLICK_/BTN_/g'
 	elif [ "$x" == "TAB" ] || [ "$x" == "SHIFT" ] || [ "$x" == "CTRL" ] || [ "$x" == "ALT" ] || [ "$x" == "ESC" ]; then
 		if [ "$x" == "SHIFT" ] || [ "$x" == "CTRL" ] || [ "$x" == "ALT" ]; then
-			echo "KEY_LEFT$x"
+			/bin/echo "KEY_LEFT$x"
 		else
-			echo "KEY_$x"
+			/bin/echo "KEY_$x"
 		fi
-	elif $(echo "$x" | grep -q '[[:alnum:]]'); then
-		echo "KEY_$x"
+	elif $(/bin/echo "$x" | /bin/grep -q '[[:alnum:]]'); then
+		/bin/echo "KEY_$x"
 	else
-		echo "void"
+		/bin/echo "void"
 	fi
 else
-	echo "void"
+	/bin/echo "void"
 fi)
 	RIGHT_TRIG=$(
-if $(echo "$contents" | grep -q "RIGHT_TRIGGER"); then
-	x=$(echo "$contents" | grep "RIGHT_TRIGGER")
-	x=$(echo "$x" | sed 's/RIGHT_TRIGGER=//g')
+if $(/bin/echo "$contents" | /bin/grep -q "RIGHT_TRIGGER"); then
+	x=$(/bin/echo "$contents" | /bin/grep "RIGHT_TRIGGER")
+	x=$(/bin/echo "$x" | /bin/sed 's/RIGHT_TRIGGER=//g')
 	if [ "$x" == "void" ] || [ "$x" == "null" ] || [ "$x" == " " ]; then
-		echo "void"
+		/bin/echo "void"
 	elif [ "$x" == "MOUSE" ] || [ "$x" == "mouse" ]; then
-		echo "REL_X:20"
-	elif $( echo "$x" | grep -q "CLICK_"); then
-		echo "$x" | sed 's/CLICK_/BTN_/g'
+		/bin/echo "REL_X:20"
+	elif $( /bin/echo "$x" | /bin/grep -q "CLICK_"); then
+		/bin/echo "$x" | /bin/sed 's/CLICK_/BTN_/g'
 	elif [ "$x" == "TAB" ] || [ "$x" == "SHIFT" ] || [ "$x" == "CTRL" ] || [ "$x" == "ALT" ] || [ "$x" == "ESC" ]; then
 		if [ "$x" == "SHIFT" ] || [ "$x" == "CTRL" ] || [ "$x" == "ALT" ]; then
-			echo "KEY_LEFT$x"
+			/bin/echo "KEY_LEFT$x"
 		else
-			echo "KEY_$x"
+			/bin/echo "KEY_$x"
 		fi
-	elif $(echo "$x" | grep -q '[[:alnum:]]'); then
-		echo "KEY_$x"
+	elif $(/bin/echo "$x" | /bin/grep -q '[[:alnum:]]'); then
+		/bin/echo "KEY_$x"
 	else
-		echo "void"
+		/bin/echo "void"
 	fi
 else
-	echo "void"
+	/bin/echo "void"
 fi)
 	LEFT_TRIG=$(
-if $(echo "$contents" | grep -q "LEFT_TRIGGER"); then
-	x=$(echo "$contents" | grep "LEFT_TRIGGER")
-	x=$(echo "$x" | sed 's/LEFT_TRIGGER=//g')
+if $(/bin/echo "$contents" | /bin/grep -q "LEFT_TRIGGER"); then
+	x=$(/bin/echo "$contents" | /bin/grep "LEFT_TRIGGER")
+	x=$(/bin/echo "$x" | /bin/sed 's/LEFT_TRIGGER=//g')
 	if [ "$x" == "void" ] || [ "$x" == "null" ] || [ "$x" == " " ]; then
-		echo "void"
+		/bin/echo "void"
 	elif [ "$x" == "MOUSE" ] || [ "$x" == "mouse" ]; then
-		echo "REL_X:20"
-	elif $( echo "$x" | grep -q "CLICK_"); then
-		echo "$x" | sed 's/CLICK_/BTN_/g'
+		/bin/echo "REL_X:20"
+	elif $( /bin/echo "$x" | /bin/grep -q "CLICK_"); then
+		/bin/echo "$x" | /bin/sed 's/CLICK_/BTN_/g'
 	elif [ "$x" == "TAB" ] || [ "$x" == "SHIFT" ] || [ "$x" == "CTRL" ] || [ "$x" == "ALT" ] || [ "$x" == "ESC" ]; then
 		if [ "$x" == "SHIFT" ] || [ "$x" == "CTRL" ] || [ "$x" == "ALT" ]; then
-			echo "KEY_LEFT$x"
+			/bin/echo "KEY_LEFT$x"
 		else
-			echo "KEY_$x"
+			/bin/echo "KEY_$x"
 		fi
-	elif $(echo "$x" | grep -q '[[:alnum:]]'); then
-		echo "KEY_$x"
+	elif $(/bin/echo "$x" | /bin/grep -q '[[:alnum:]]'); then
+		/bin/echo "KEY_$x"
 	else
-		echo "void"
+		/bin/echo "void"
 	fi
 else
-	echo "void"
+	/bin/echo "void"
 fi)
 	A_BUT=$(
-if $(echo "$contents" | grep -q "A="); then
-	x=$(echo "$contents" | grep "A=")
-	x=$(echo "$x" | sed 's/A=//g')
+if $(/bin/echo "$contents" | /bin/grep -q "A="); then
+	x=$(/bin/echo "$contents" | /bin/grep "A=")
+	x=$(/bin/echo "$x" | /bin/sed 's/A=//g')
 	if [ "$x" == "void" ] || [ "$x" == "null" ] || [ "$x" == " " ]; then
-		echo "void"
+		/bin/echo "void"
 	elif [ "$x" == "MOUSE" ] || [ "$x" == "mouse" ]; then
-		echo "REL_X:20"
-	elif $( echo "$x" | grep -q "CLICK_"); then
-		echo "$x" | sed 's/CLICK_/BTN_/g'
+		/bin/echo "REL_X:20"
+	elif $( /bin/echo "$x" | /bin/grep -q "CLICK_"); then
+		/bin/echo "$x" | /bin/sed 's/CLICK_/BTN_/g'
 	elif [ "$x" == "TAB" ] || [ "$x" == "SHIFT" ] || [ "$x" == "CTRL" ] || [ "$x" == "ALT" ] || [ "$x" == "ESC" ]; then
 		if [ "$x" == "SHIFT" ] || [ "$x" == "CTRL" ] || [ "$x" == "ALT" ]; then
-			echo "KEY_LEFT$x"
+			/bin/echo "KEY_LEFT$x"
 		else
-			echo "KEY_$x"
+			/bin/echo "KEY_$x"
 		fi
-	elif $(echo "$x" | grep -q '[[:alnum:]]'); then
-		echo "KEY_$x"
+	elif $(/bin/echo "$x" | /bin/grep -q '[[:alnum:]]'); then
+		/bin/echo "KEY_$x"
 	else
-		echo "void"
+		/bin/echo "void"
 	fi
 else
-	echo "void"
+	/bin/echo "void"
 fi)
 	B_BUT=$(
-if $(echo "$contents" | grep -q "B="); then
-	x=$(echo "$contents" | grep "B=")
-	x=$(echo "$x" | sed 's/B=//g')
+if $(/bin/echo "$contents" | /bin/grep -q "B="); then
+	x=$(/bin/echo "$contents" | /bin/grep "B=")
+	x=$(/bin/echo "$x" | /bin/sed 's/B=//g')
 	if [ "$x" == "void" ] || [ "$x" == "null" ] || [ "$x" == " " ]; then
-		echo "void"
+		/bin/echo "void"
 	elif [ "$x" == "MOUSE" ] || [ "$x" == "mouse" ]; then
-		echo "REL_X:20"
-	elif $( echo "$x" | grep -q "CLICK_"); then
-		echo "$x" | sed 's/CLICK_/BTN_/g'
+		/bin/echo "REL_X:20"
+	elif $( /bin/echo "$x" | /bin/grep -q "CLICK_"); then
+		/bin/echo "$x" | /bin/sed 's/CLICK_/BTN_/g'
 	elif [ "$x" == "TAB" ] || [ "$x" == "SHIFT" ] || [ "$x" == "CTRL" ] || [ "$x" == "ALT" ] || [ "$x" == "ESC" ]; then
 		if [ "$x" == "SHIFT" ] || [ "$x" == "CTRL" ] || [ "$x" == "ALT" ]; then
-			echo "KEY_LEFT$x"
+			/bin/echo "KEY_LEFT$x"
 		else
-			echo "KEY_$x"
+			/bin/echo "KEY_$x"
 		fi
-	elif $(echo "$x" | grep -q '[[:alnum:]]'); then
-		echo "KEY_$x"
+	elif $(/bin/echo "$x" | /bin/grep -q '[[:alnum:]]'); then
+		/bin/echo "KEY_$x"
 	else
-		echo "void"
+		/bin/echo "void"
 	fi
 else
-	echo "void"
+	/bin/echo "void"
 fi)
 	X_BUT=$(
-if $(echo "$contents" | grep -q "X="); then
-	x=$(echo "$contents" | grep "X=")
-	x=$(echo "$x" | sed 's/X=//g')
+if $(/bin/echo "$contents" | /bin/grep -q "X="); then
+	x=$(/bin/echo "$contents" | /bin/grep "X=")
+	x=$(/bin/echo "$x" | /bin/sed 's/X=//g')
 	if [ "$x" == "void" ] || [ "$x" == "null" ] || [ "$x" == " " ]; then
-		echo "void"
+		/bin/echo "void"
 	elif [ "$x" == "MOUSE" ] || [ "$x" == "mouse" ]; then
-		echo "REL_X:20"
-	elif $( echo "$x" | grep -q "CLICK_"); then
-		echo "$x" | sed 's/CLICK_/BTN_/g'
+		/bin/echo "REL_X:20"
+	elif $( /bin/echo "$x" | /bin/grep -q "CLICK_"); then
+		/bin/echo "$x" | /bin/sed 's/CLICK_/BTN_/g'
 	elif [ "$x" == "TAB" ] || [ "$x" == "SHIFT" ] || [ "$x" == "CTRL" ] || [ "$x" == "ALT" ] || [ "$x" == "ESC" ]; then
 		if [ "$x" == "SHIFT" ] || [ "$x" == "CTRL" ] || [ "$x" == "ALT" ]; then
-			echo "KEY_LEFT$x"
+			/bin/echo "KEY_LEFT$x"
 		else
-			echo "KEY_$x"
+			/bin/echo "KEY_$x"
 		fi
-	elif $(echo "$x" | grep -q '[[:alnum:]]'); then
-		echo "KEY_$x"
+	elif $(/bin/echo "$x" | /bin/grep -q '[[:alnum:]]'); then
+		/bin/echo "KEY_$x"
 	else
-		echo "void"
+		/bin/echo "void"
 	fi
 else
-	echo "void"
+	/bin/echo "void"
 fi)
 	Y_BUT=$(
-if $(echo "$contents" | grep -q "Y="); then
-	x=$(echo "$contents" | grep "Y=")
-	x=$(echo "$x" | sed 's/Y=//g')
+if $(/bin/echo "$contents" | /bin/grep -q "Y="); then
+	x=$(/bin/echo "$contents" | /bin/grep "Y=")
+	x=$(/bin/echo "$x" | /bin/sed 's/Y=//g')
 	if [ "$x" == "void" ] || [ "$x" == "null" ] || [ "$x" == " " ]; then
-		echo "void"
+		/bin/echo "void"
 	elif [ "$x" == "MOUSE" ] || [ "$x" == "mouse" ]; then
-		echo "REL_X:20"
-	elif $( echo "$x" | grep -q "CLICK_"); then
-		echo "$x" | sed 's/CLICK_/BTN_/g'
+		/bin/echo "REL_X:20"
+	elif $( /bin/echo "$x" | /bin/grep -q "CLICK_"); then
+		/bin/echo "$x" | /bin/sed 's/CLICK_/BTN_/g'
 	elif [ "$x" == "TAB" ] || [ "$x" == "SHIFT" ] || [ "$x" == "CTRL" ] || [ "$x" == "ALT" ] || [ "$x" == "ESC" ]; then
 		if [ "$x" == "SHIFT" ] || [ "$x" == "CTRL" ] || [ "$x" == "ALT" ]; then
-			echo "KEY_LEFT$x"
+			/bin/echo "KEY_LEFT$x"
 		else
-			echo "KEY_$x"
+			/bin/echo "KEY_$x"
 		fi
-	elif $(echo "$x" | grep -q '[[:alnum:]]'); then
-		echo "KEY_$x"
+	elif $(/bin/echo "$x" | /bin/grep -q '[[:alnum:]]'); then
+		/bin/echo "KEY_$x"
 	else
-		echo "void"
+		/bin/echo "void"
 	fi
 else
-	echo "void"
+	/bin/echo "void"
 fi)
 	HOME_BUT=$(
-if $(echo "$contents" | grep -q "MENU"); then
-	x=$(echo "$contents" | grep "MENU")
-	x=$(echo "$x" | sed 's/MENU=//g')
+if $(/bin/echo "$contents" | /bin/grep -q "MENU"); then
+	x=$(/bin/echo "$contents" | /bin/grep "MENU")
+	x=$(/bin/echo "$x" | /bin/sed 's/MENU=//g')
 	if [ "$x" == "void" ] || [ "$x" == "null" ] || [ "$x" == " " ]; then
-		echo "void"
+		/bin/echo "void"
 	elif [ "$x" == "MOUSE" ] || [ "$x" == "mouse" ]; then
-		echo "REL_X:20"
-	elif $( echo "$x" | grep -q "CLICK_"); then
-		echo "$x" | sed 's/CLICK_/BTN_/g'
+		/bin/echo "REL_X:20"
+	elif $( /bin/echo "$x" | /bin/grep -q "CLICK_"); then
+		/bin/echo "$x" | /bin/sed 's/CLICK_/BTN_/g'
 	elif [ "$x" == "TAB" ] || [ "$x" == "SHIFT" ] || [ "$x" == "CTRL" ] || [ "$x" == "ALT" ] || [ "$x" == "ESC" ]; then
 		if [ "$x" == "SHIFT" ] || [ "$x" == "CTRL" ] || [ "$x" == "ALT" ]; then
-			echo "KEY_LEFT$x"
+			/bin/echo "KEY_LEFT$x"
 		else
-			echo "KEY_$x"
+			/bin/echo "KEY_$x"
 		fi
-	elif $(echo "$x" | grep -q '[[:alnum:]]'); then
-		echo "KEY_$x"
+	elif $(/bin/echo "$x" | /bin/grep -q '[[:alnum:]]'); then
+		/bin/echo "KEY_$x"
 	else
-		echo "void"
+		/bin/echo "void"
 	fi
 else
-	echo "void"
+	/bin/echo "void"
 fi)
 	START_BUT=$(
-if $(echo "$contents" | grep -q "START"); then
-	x=$(echo "$contents" | grep "START")
-	x=$(echo "$x" | sed 's/START=//g')
+if $(/bin/echo "$contents" | /bin/grep -q "START"); then
+	x=$(/bin/echo "$contents" | /bin/grep "START")
+	x=$(/bin/echo "$x" | /bin/sed 's/START=//g')
 	if [ "$x" == "void" ] || [ "$x" == "null" ] || [ "$x" == " " ]; then
-		echo "void"
+		/bin/echo "void"
 	elif [ "$x" == "MOUSE" ] || [ "$x" == "mouse" ]; then
-		echo "REL_X:20"
-	elif $( echo "$x" | grep -q "CLICK_"); then
-		echo "$x" | sed 's/CLICK_/BTN_/g'
+		/bin/echo "REL_X:20"
+	elif $( /bin/echo "$x" | /bin/grep -q "CLICK_"); then
+		/bin/echo "$x" | /bin/sed 's/CLICK_/BTN_/g'
 	elif [ "$x" == "TAB" ] || [ "$x" == "SHIFT" ] || [ "$x" == "CTRL" ] || [ "$x" == "ALT" ] || [ "$x" == "ESC" ]; then
 		if [ "$x" == "SHIFT" ] || [ "$x" == "CTRL" ] || [ "$x" == "ALT" ]; then
-			echo "KEY_LEFT$x"
+			/bin/echo "KEY_LEFT$x"
 		else
-			echo "KEY_$x"
+			/bin/echo "KEY_$x"
 		fi
-	elif $(echo "$x" | grep -q '[[:alnum:]]'); then
-		echo "KEY_$x"
+	elif $(/bin/echo "$x" | /bin/grep -q '[[:alnum:]]'); then
+		/bin/echo "KEY_$x"
 	else
-		echo "void"
+		/bin/echo "void"
 	fi
 else
-	echo "void"
+	/bin/echo "void"
 fi)
 	BACK_BUT=$(
-if $(echo "$contents" | grep -q "BACK"); then
-	x=$(echo "$contents" | grep "BACK")
-	x=$(echo "$x" | sed 's/BACK=//g')
+if $(/bin/echo "$contents" | /bin/grep -q "BACK"); then
+	x=$(/bin/echo "$contents" | /bin/grep "BACK")
+	x=$(/bin/echo "$x" | /bin/sed 's/BACK=//g')
 	if [ "$x" == "void" ] || [ "$x" == "null" ] || [ "$x" == " " ]; then
-		echo "void"
+		/bin/echo "void"
 	elif [ "$x" == "MOUSE" ] || [ "$x" == "mouse" ]; then
-		echo "REL_X:20"
-	elif $( echo "$x" | grep -q "CLICK_"); then
-		echo "$x" | sed 's/CLICK_/BTN_/g'
+		/bin/echo "REL_X:20"
+	elif $( /bin/echo "$x" | /bin/grep -q "CLICK_"); then
+		/bin/echo "$x" | /bin/sed 's/CLICK_/BTN_/g'
 	elif [ "$x" == "TAB" ] || [ "$x" == "SHIFT" ] || [ "$x" == "CTRL" ] || [ "$x" == "ALT" ] || [ "$x" == "ESC" ]; then
 		if [ "$x" == "SHIFT" ] || [ "$x" == "CTRL" ] || [ "$x" == "ALT" ]; then
-			echo "KEY_LEFT$x"
+			/bin/echo "KEY_LEFT$x"
 		else
-			echo "KEY_$x"
+			/bin/echo "KEY_$x"
 		fi
-	elif $(echo "$x" | grep -q '[[:alnum:]]'); then
-		echo "KEY_$x"
+	elif $(/bin/echo "$x" | /bin/grep -q '[[:alnum:]]'); then
+		/bin/echo "KEY_$x"
 	else
-		echo "void"
+		/bin/echo "void"
 	fi
 else
-	echo "void"
+	/bin/echo "void"
 fi)
 	UP=$(
-if $(echo "$contents" | grep -q "UP"); then
-	x=$(echo "$contents" | grep "UP")
-	x=$(echo "$x" | sed 's/UP=//g')
+if $(/bin/echo "$contents" | /bin/grep -q "UP"); then
+	x=$(/bin/echo "$contents" | /bin/grep "UP")
+	x=$(/bin/echo "$x" | /bin/sed 's/UP=//g')
 	if [ "$x" == "void" ] || [ "$x" == "null" ] || [ "$x" == " " ]; then
-		echo "void"
+		/bin/echo "void"
 	elif [ "$x" == "MOUSE" ] || [ "$x" == "mouse" ]; then
-		echo "REL_X:20"
-	elif $( echo "$x" | grep -q "CLICK_"); then
-		echo "$x" | sed 's/CLICK_/BTN_/g'
+		/bin/echo "REL_X:20"
+	elif $( /bin/echo "$x" | /bin/grep -q "CLICK_"); then
+		/bin/echo "$x" | /bin/sed 's/CLICK_/BTN_/g'
 	elif [ "$x" == "TAB" ] || [ "$x" == "SHIFT" ] || [ "$x" == "CTRL" ] || [ "$x" == "ALT" ] || [ "$x" == "ESC" ]; then
 		if [ "$x" == "SHIFT" ] || [ "$x" == "CTRL" ] || [ "$x" == "ALT" ]; then
-			echo "KEY_LEFT$x"
+			/bin/echo "KEY_LEFT$x"
 		else
-			echo "KEY_$x"
+			/bin/echo "KEY_$x"
 		fi
-	elif $(echo "$x" | grep -q '[[:alnum:]]'); then
-		echo "KEY_$x"
+	elif $(/bin/echo "$x" | /bin/grep -q '[[:alnum:]]'); then
+		/bin/echo "KEY_$x"
 	else
-		echo "void"
+		/bin/echo "void"
 	fi
 else
-	echo "void"
+	/bin/echo "void"
 fi)
 	DOWN=$(
-if $(echo "$contents" | grep -q "DOWN"); then
-	x=$(echo "$contents" | grep "DOWN")
-	x=$(echo "$x" | sed 's/DOWN=//g')
+if $(/bin/echo "$contents" | /bin/grep -q "DOWN"); then
+	x=$(/bin/echo "$contents" | /bin/grep "DOWN")
+	x=$(/bin/echo "$x" | /bin/sed 's/DOWN=//g')
 	if [ "$x" == "void" ] || [ "$x" == "null" ] || [ "$x" == " " ]; then
-		echo "void"
+		/bin/echo "void"
 	elif [ "$x" == "MOUSE" ] || [ "$x" == "mouse" ]; then
-		echo "REL_X:20"
-	elif $( echo "$x" | grep -q "CLICK_"); then
-		echo "$x" | sed 's/CLICK_/BTN_/g'
+		/bin/echo "REL_X:20"
+	elif $( /bin/echo "$x" | /bin/grep -q "CLICK_"); then
+		/bin/echo "$x" | /bin/sed 's/CLICK_/BTN_/g'
 	elif [ "$x" == "TAB" ] || [ "$x" == "SHIFT" ] || [ "$x" == "CTRL" ] || [ "$x" == "ALT" ] || [ "$x" == "ESC" ]; then
 		if [ "$x" == "SHIFT" ] || [ "$x" == "CTRL" ] || [ "$x" == "ALT" ]; then
-			echo "KEY_LEFT$x"
+			/bin/echo "KEY_LEFT$x"
 		else
-			echo "KEY_$x"
+			/bin/echo "KEY_$x"
 		fi
-	elif $(echo "$x" | grep -q '[[:alnum:]]'); then
-		echo "KEY_$x"
+	elif $(/bin/echo "$x" | /bin/grep -q '[[:alnum:]]'); then
+		/bin/echo "KEY_$x"
 	else
-		echo "void"
+		/bin/echo "void"
 	fi
 else
-	echo "void"
+	/bin/echo "void"
 fi)
 	LEFT=$(
-if $(echo "$contents" | grep -q "LEFT="); then
-	x=$(echo "$contents" | grep "LEFT=")
-	x=$(echo "$x" | sed 's/LEFT=//g')
+if $(/bin/echo "$contents" | /bin/grep -q "LEFT="); then
+	x=$(/bin/echo "$contents" | /bin/grep "LEFT=")
+	x=$(/bin/echo "$x" | /bin/sed 's/LEFT=//g')
 	if [ "$x" == "void" ] || [ "$x" == "null" ] || [ "$x" == " " ]; then
-		echo "void"
+		/bin/echo "void"
 	elif [ "$x" == "MOUSE" ] || [ "$x" == "mouse" ]; then
-		echo "REL_X:20"
-	elif $( echo "$x" | grep -q "CLICK_"); then
-		echo "$x" | sed 's/CLICK_/BTN_/g'
+		/bin/echo "REL_X:20"
+	elif $( /bin/echo "$x" | /bin/grep -q "CLICK_"); then
+		/bin/echo "$x" | /bin/sed 's/CLICK_/BTN_/g'
 	elif [ "$x" == "TAB" ] || [ "$x" == "SHIFT" ] || [ "$x" == "CTRL" ] || [ "$x" == "ALT" ] || [ "$x" == "ESC" ]; then
 		if [ "$x" == "SHIFT" ] || [ "$x" == "CTRL" ] || [ "$x" == "ALT" ]; then
-			echo "KEY_LEFT$x"
+			/bin/echo "KEY_LEFT$x"
 		else
-			echo "KEY_$x"
+			/bin/echo "KEY_$x"
 		fi
-	elif $(echo "$x" | grep -q '[[:alnum:]]'); then
-		echo "KEY_$x"
+	elif $(/bin/echo "$x" | /bin/grep -q '[[:alnum:]]'); then
+		/bin/echo "KEY_$x"
 	else
-		echo "void"
+		/bin/echo "void"
 	fi
 else
-	echo "void"
+	/bin/echo "void"
 fi)
 	RIGHT=$(
-if $(echo "$contents" | grep -q "RIGHT="); then
-	x=$(echo "$contents" | grep "RIGHT=")
-	x=$(echo "$x" | sed 's/RIGHT=//g')
+if $(/bin/echo "$contents" | /bin/grep -q "RIGHT="); then
+	x=$(/bin/echo "$contents" | /bin/grep "RIGHT=")
+	x=$(/bin/echo "$x" | /bin/sed 's/RIGHT=//g')
 	if [ "$x" == "void" ] || [ "$x" == "null" ] || [ "$x" == " " ]; then
-		echo "void"
+		/bin/echo "void"
 	elif [ "$x" == "MOUSE" ] || [ "$x" == "mouse" ]; then
-		echo "REL_X:20"
-	elif $( echo "$x" | grep -q "CLICK_"); then
-		echo "$x" | sed 's/CLICK_/BTN_/g'
+		/bin/echo "REL_X:20"
+	elif $( /bin/echo "$x" | /bin/grep -q "CLICK_"); then
+		/bin/echo "$x" | /bin/sed 's/CLICK_/BTN_/g'
 	elif [ "$x" == "TAB" ] || [ "$x" == "SHIFT" ] || [ "$x" == "CTRL" ] || [ "$x" == "ALT" ] || [ "$x" == "ESC" ]; then
 		if [ "$x" == "SHIFT" ] || [ "$x" == "CTRL" ] || [ "$x" == "ALT" ]; then
-			echo "KEY_LEFT$x"
+			/bin/echo "KEY_LEFT$x"
 		else
-			echo "KEY_$x"
+			/bin/echo "KEY_$x"
 		fi
-	elif $(echo "$x" | grep -q '[[:alnum:]]'); then
-		echo "KEY_$x"
+	elif $(/bin/echo "$x" | /bin/grep -q '[[:alnum:]]'); then
+		/bin/echo "KEY_$x"
 	else
-		echo "void"
+		/bin/echo "void"
 	fi
 else
-	echo "void"
+	/bin/echo "void"
 fi)
 else
 	#set up default layout
@@ -604,42 +604,42 @@ fi
 inf=1
 while [ "$inf" == "1" ]; do
 #scan usb devices and get list of Product:Vendor IDs (PVIDs)
-	sleep 0.1s
+	/bin/sleep 0.1s
 	#gain VID/PID
-	usb=$(lsusb | sed -e 's/.*ID \([a-f0-9]\+:[a-f0-9]\+\).*/\1/g')
-	rm $usb_loc
+	usb=$(lsusb | /bin/sed -e 's/.*ID \([a-f0-9]\+:[a-f0-9]\+\).*/\1/g')
+	/bin/rm $usb_loc
 	#current USB state
-	echo "$usb" >> $usb_loc
+	/bin/echo "$usb" >> $usb_loc
 	#check to see if any of them are already mounted
 	for y in $usb; do
-		sleep 0.1s
-		echo $mounted | grep  -q -e "$y" && sed -i "/\b\($y\)\b/d" $usb_loc && usb=$(cat $usb_loc)
+		/bin/sleep 0.1s
+		/bin/echo $mounted | /bin/grep  -q -e "$y" && /bin/sed -i "/\b\($y\)\b/d" $usb_loc && usb=$(/bin/cat $usb_loc)
 	done
 	{
 		#check for typical support from xboxdrv and mount the countroller in that manner if it is supported
 		for y in $usb; do
-			sleep 0.1s
-			echo $supported | grep  -q -e "$y" && (pkexec xboxdrv --detach-kernel-driver &) && echo "$y" >> $mounted_loc && mounted=$(cat $mounted_loc)
+			/bin/sleep 0.1s
+			/bin/echo $supported | /bin/grep  -q -e "$y" && (/usr/bin/pkexec /usr/bin/xboxdrv --detach-kernel-driver &) && /bin/echo "$y" >> $mounted_loc && mounted=$(/bin/cat $mounted_loc)
 		done
 	} || {
 		#if the above method fails, attempt the custom method (mapping the controller keys to keyboard keys so it basicly emulates a keyboard)
 		for y in $usb; do
-			sleep 0.1s
-			echo "$custom_add" | grep  -q -e "$y" && (pkexec xboxdrv --detach-kernel-driver -s --device-name "Game Pad" --device-by-id "$y" --type xbox360 --deadzone 4000 --dpad-as-button --trigger-as-button --ui-axismap "x2=$RIGHTANALOG_X,y2=$RIGHTANALOG_Y,x1=$LEFTANALOG_X,y1=$LEFTANALOG_Y" --ui-buttonmap "tl=$LEFT_BUT,tr=$RIGHT_BUT" --ui-buttonmap "a=$A_BUT,b=$B_BUT,x=$X_BUT,y=$Y_BUT" --ui-buttonmap "lb=$LEFT_BUMP,rb=$RIGHT_BUMP" --ui-buttonmap "lt=$LEFT_TRIG,rt=$RIGHT_TRIG" --ui-buttonmap "dl=$LEFT,dr=$RIGHT,du=$UP,dd=$DOWN" --ui-buttonmap "back=$BACK_BUT,start=$START_BUT,guide=$HOME_BUT" &) && echo "$y" >> $mounted_loc && mounted=$(cat $mounted_loc)
+			/bin/sleep 0.1s
+			/bin/echo "$custom_add" | /bin/grep  -q -e "$y" && (/usr/bin/pkexec /usr/bin/xboxdrv --detach-kernel-driver -s --device-name "Game Pad" --device-by-id "$y" --type xbox360 --deadzone 4000 --dpad-as-button --trigger-as-button --ui-axismap "x2=$RIGHTANALOG_X,y2=$RIGHTANALOG_Y,x1=$LEFTANALOG_X,y1=$LEFTANALOG_Y" --ui-buttonmap "tl=$LEFT_BUT,tr=$RIGHT_BUT" --ui-buttonmap "a=$A_BUT,b=$B_BUT,x=$X_BUT,y=$Y_BUT" --ui-buttonmap "lb=$LEFT_BUMP,rb=$RIGHT_BUMP" --ui-buttonmap "lt=$LEFT_TRIG,rt=$RIGHT_TRIG" --ui-buttonmap "dl=$LEFT,dr=$RIGHT,du=$UP,dd=$DOWN" --ui-buttonmap "back=$BACK_BUT,start=$START_BUT,guide=$HOME_BUT" &) && /bin/echo "$y" >> $mounted_loc && mounted=$(/bin/cat $mounted_loc)
 		done
 	} || {
 		#clear it's sort of cache on the internal drive
-		rm $mounted_loc
-		echo "0000:0000" >> $mounted_loc
+		/bin/rm $mounted_loc
+		/bin/echo "0000:0000" >> $mounted_loc
 	}
 	#modify the running log of what is mounted
-	echo "$mounted" >> "$edit"
+	/bin/echo "$mounted" >> "$edit"
 	for f in $mounted; do
-		sleep 0.1s
-		(echo "$usb" | grep  -q -e "$f") || sed -i "/\b\($f\)\b/d" $edit
+		/bin/sleep 0.1s
+		(/bin/echo "$usb" | /bin/grep  -q -e "$f") || /bin/sed -i "/\b\($f\)\b/d" $edit
 	done
 	#update the log in memory
-	mounted=$(cat $edit)
+	mounted=$(/bin/cat $edit)
 	#clear out needless olf files
-	rm "$edit"
+	/bin/rm "$edit"
 done

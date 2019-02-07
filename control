@@ -1,6 +1,6 @@
 Package: usb-scanner
 Version: 2.9.1
-Maintainer: Thomas Castleman <draugeros@gmail.com>
+Maintainer: Thomas Castleman <contact@draugeros.ml>
 Section: misc
 Homepage: https://github.com/Batcastle/usb-scanner
 Architecture: all

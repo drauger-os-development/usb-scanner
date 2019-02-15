@@ -35,7 +35,7 @@ while getopts 'fc' flag; do
 	esac
 done
 if [ "$custom-mapping" == "0" ]; then
-	mapping=$(/bin/cat /lib/usb-scanner/standard_layout.conf) || ( /bin/echo '/lib/usb-scanner/standard_layout.conf cannot be read') && exit 2 )
+	mapping=$(/bin/cat /lib/usb-scanner/standard_layout.conf || ( /bin/echo '/lib/usb-scanner/standard_layout.conf cannot be read' && exit 2 ))
 elif [ "$custom-mapping" == "1" ]; then
 	mapping=$(/etc/usb-scanner/import /etc/usb-scanner/usb-scanner.lib parser)
 	contents=$(/bin/cat $HOME/.xboxdrv/layout.conf)

@@ -20,6 +20,13 @@
 #  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #  MA 02110-1301, USA.
 #
+cache="/lib/usb-scanner"
+usb_loc="$cache/usb.list"
+mounted_loc="$cache/mounted.list"
+mounted=$(/bin/cat $mounted_loc)
+custom_add=$(/bin/cat "$cache/custom_add.list")
+supported=$(/bin/cat "$cache/supported.list")
+edit="$cache/edit.list"
 while getopts 'fc' flag; do
 	case "${flag}" in
 		c) custom-mapping=1 ;;
@@ -80,6 +87,36 @@ if [ "$foce-mapping" == "0" ]; then
 		#clear out needless olf files
 		/bin/rm "$edit"
 	done
-elif
-	exit 1
+elif [ "$force-mapping" == "1" ]; then
+	inf=1
+	while [ "$inf" == "1" ]; do
+	#scan usb devices and get list of Product:Vendor IDs (PVIDs)
+		/bin/sleep 0.1s
+		#gain VID/PID
+		usb=$(lsusb | /bin/sed -e 's/.*ID \([a-f0-9]\+:[a-f0-9]\+\).*/\1/g')
+		/bin/rm $usb_loc
+		#current USB state
+		/bin/echo "$usb" >> $usb_loc
+		#check to see if any of them are already mounted
+		for y in $usb; do
+			/bin/sleep 0.1s
+			/bin/echo $mounted | /bin/grep  -q -e "$y" && /bin/sed -i "/\b\($y\)\b/d" $usb_loc && usb=$(/bin/cat $usb_loc)
+		done
+		{
+			#check for typical support from xboxdrv and mount the countroller in that manner if it is supported
+			for y in $usb; do
+				/bin/sleep 0.1s
+				/bin/echo $supported | /bin/grep  -q -e "$y" && (/usr/bin/pkexec /usr/bin/xboxdrv --detach-kernel-driver -s --device-name "Game Pad" --device-by-id "$y" --type xbox360 --deadzone 4000 --dpad-as-button --trigger-as-button --ui-axismap "x2=$RIGHTANALOG_X,y2=$RIGHTANALOG_Y,x1=$LEFTANALOG_X,y1=$LEFTANALOG_Y" --ui-buttonmap "tl=$LEFT_BUT,tr=$RIGHT_BUT" --ui-buttonmap "a=$A_BUT,b=$B_BUT,x=$X_BUT,y=$Y_BUT" --ui-buttonmap "lb=$LEFT_BUMP,rb=$RIGHT_BUMP" --ui-buttonmap "lt=$LEFT_TRIG,rt=$RIGHT_TRIG" --ui-buttonmap "dl=$LEFT,dr=$RIGHT,du=$UP,dd=$DOWN" --ui-buttonmap "back=$BACK_BUT,start=$START_BUT,guide=$HOME_BUT" &) && /bin/echo "$y" >> $mounted_loc && mounted=$(/bin/cat $mounted_loc)
+			done
+		} || {
+			#if the above method fails, attempt the custom method (mapping the controller keys to keyboard keys so it basicly emulates a keyboard)
+			for y in $usb; do
+				/bin/sleep 0.1s
+				/bin/echo "$custom_add" | /bin/grep  -q -e "$y" && (/usr/bin/pkexec /usr/bin/xboxdrv --detach-kernel-driver -s --device-name "Game Pad" --device-by-id "$y" --type xbox360 --deadzone 4000 --dpad-as-button --trigger-as-button --ui-axismap "x2=$RIGHTANALOG_X,y2=$RIGHTANALOG_Y,x1=$LEFTANALOG_X,y1=$LEFTANALOG_Y" --ui-buttonmap "tl=$LEFT_BUT,tr=$RIGHT_BUT" --ui-buttonmap "a=$A_BUT,b=$B_BUT,x=$X_BUT,y=$Y_BUT" --ui-buttonmap "lb=$LEFT_BUMP,rb=$RIGHT_BUMP" --ui-buttonmap "lt=$LEFT_TRIG,rt=$RIGHT_TRIG" --ui-buttonmap "dl=$LEFT,dr=$RIGHT,du=$UP,dd=$DOWN" --ui-buttonmap "back=$BACK_BUT,start=$START_BUT,guide=$HOME_BUT" &) && /bin/echo "$y" >> $mounted_loc && mounted=$(/bin/cat $mounted_loc)
+			done
+		} || {
+			#clear it's sort of cache on the internal drive
+			/bin/rm $mounted_loc
+			/bin/echo "0000:0000" >> $mounted_loc
+		}
 fi

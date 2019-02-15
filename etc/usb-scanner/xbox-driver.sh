@@ -29,14 +29,14 @@ supported=$(/bin/cat "$cache/supported.list")
 edit="$cache/edit.list"
 while getopts 'fc' flag; do
 	case "${flag}" in
-		c) custom-mapping=1 ;;
-		f) force-mapping=1 ;;
-		*) force-mapping=0; custom-mapping=0 ;;
+		c) cm=1 ;;
+		f) fm=1 ;;
+		*) fm=0; cm=0 ;;
 	esac
 done
-if [ "$custom-mapping" == "0" ]; then
+if [ "$cm" == "0" ]; then
 	mapping=$(/bin/cat /lib/usb-scanner/standard_layout.conf || ( /bin/echo '/lib/usb-scanner/standard_layout.conf cannot be read' && exit 2 ))
-elif [ "$custom-mapping" == "1" ]; then
+elif [ "$cm" == "1" ]; then
 	mapping=$(/etc/usb-scanner/import /etc/usb-scanner/usb-scanner.lib parser)
 	contents=$(/bin/cat $HOME/.xboxdrv/layout.conf)
 else
@@ -44,7 +44,7 @@ else
 	exit 2
 fi
 eval "$mapping"
-if [ "$foce-mapping" == "0" ]; then
+if [ "$fm" == "0" ]; then
 	inf=1
 	while [ "$inf" == "1" ]; do
 	#scan usb devices and get list of Product:Vendor IDs (PVIDs)
@@ -87,7 +87,7 @@ if [ "$foce-mapping" == "0" ]; then
 		#clear out needless olf files
 		/bin/rm "$edit"
 	done
-elif [ "$force-mapping" == "1" ]; then
+elif [ "$fm" == "1" ]; then
 	inf=1
 	while [ "$inf" == "1" ]; do
 	#scan usb devices and get list of Product:Vendor IDs (PVIDs)

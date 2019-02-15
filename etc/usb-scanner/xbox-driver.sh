@@ -29,9 +29,9 @@ supported=$(/bin/cat "$cache/supported.list")
 edit="$cache/edit.list"
 while getopts 'fc' flag; do
 	case "${flag}" in
-		c) cm=1 ;;
-		f) fm=1 ;;
-		*) fm=0; cm=0 ;;
+		c) cm="1" ;;
+		f) fm="1" ;;
+		*) fm="0"; cm="0" ;;
 	esac
 done
 if [ "$cm" == "0" ]; then

@@ -1,2 +1,2 @@
 #!/bin/bash
-chown "$(users)":"$(users)" /lib/usb-scanner
+chown "$(users)":"$(users)" -R /lib/usb-scanner

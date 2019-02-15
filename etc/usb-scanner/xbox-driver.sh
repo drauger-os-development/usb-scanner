@@ -27,6 +27,8 @@ mounted=$(/bin/cat $mounted_loc)
 custom_add=$(/bin/cat "$cache/custom_add.list")
 supported=$(/bin/cat "$cache/supported.list")
 edit="$cache/edit.list"
+fm="0"
+cm="0"
 while getopts 'fc' flag; do
 	case "${flag}" in
 		c) cm="1" ;;
@@ -119,4 +121,15 @@ elif [ "$fm" == "1" ]; then
 			/bin/rm $mounted_loc
 			/bin/echo "0000:0000" >> $mounted_loc
 		}
+		#modify the running log of what is mounted
+		/bin/echo "$mounted" >> "$edit"
+		for f in $mounted; do
+			/bin/sleep 0.1s
+			(/bin/echo "$usb" | /bin/grep  -q -e "$f") || /bin/sed -i "/\b\($f\)\b/d" $edit
+		done
+		#update the log in memory
+		mounted=$(/bin/cat $edit)
+		#clear out needless olf files
+		/bin/rm "$edit"
+	done
 fi

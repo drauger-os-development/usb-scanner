@@ -39,7 +39,7 @@ done
 if [ "$cm" == "0" ]; then
 	mapping=$(/bin/cat /lib/usb-scanner/standard_layout.conf || ( /bin/echo '/lib/usb-scanner/standard_layout.conf cannot be read' && exit 2 ))
 elif [ "$cm" == "1" ]; then
-	mapping=$(/etc/usb-scanner/import /etc/usb-scanner/usb-scanner.lib parser)
+	mapping=$(/etc/usb-scanner/import /lib/usb-scanner/usb-scanner.lib parser)
 	contents=$(/bin/cat $HOME/.xboxdrv/layout.conf)
 else
 	echo "Error reading flags."

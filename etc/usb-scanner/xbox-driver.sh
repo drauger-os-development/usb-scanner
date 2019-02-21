@@ -108,13 +108,11 @@ elif [ "$fm" == "1" ]; then
 			#check for typical support from xboxdrv and mount the countroller in that manner if it is supported
 			for y in $usb; do
 				/bin/sleep 0.1s
-				/bin/echo $supported | /bin/grep  -q -e "$y" && (/usr/bin/pkexec /usr/bin/xboxdrv --detach-kernel-driver -s --device-name "Game Pad" --device-by-id "$y" --type xbox360 --deadzone 4000 --dpad-as-button --trigger-as-button --ui-axismap "x2=$RIGHTANALOG_X,y2=$RIGHTANALOG_Y,x1=$LEFTANALOG_X,y1=$LEFTANALOG_Y" --ui-buttonmap "tl=$LEFT_BUT,tr=$RIGHT_BUT" --ui-buttonmap "a=$A_BUT,b=$B_BUT,x=$X_BUT,y=$Y_BUT" --ui-buttonmap "lb=$LEFT_BUMP,rb=$RIGHT_BUMP" --ui-buttonmap "lt=$LEFT_TRIG,rt=$RIGHT_TRIG" --ui-buttonmap "dl=$LEFT,dr=$RIGHT,du=$UP,dd=$DOWN" --ui-buttonmap "back=$BACK_BUT,start=$START_BUT,guide=$HOME_BUT" &) && /bin/echo "$y" >> $mounted_loc && mounted=$(/bin/cat $mounted_loc)
-			done
-		} || {
-			#if the above method fails, attempt the custom method (mapping the controller keys to keyboard keys so it basicly emulates a keyboard)
-			for y in $usb; do
-				/bin/sleep 0.1s
-				/bin/echo "$custom_add" | /bin/grep  -q -e "$y" && (/usr/bin/pkexec /usr/bin/xboxdrv --detach-kernel-driver -s --device-name "Game Pad" --device-by-id "$y" --type xbox360 --deadzone 4000 --dpad-as-button --trigger-as-button --ui-axismap "x2=$RIGHTANALOG_X,y2=$RIGHTANALOG_Y,x1=$LEFTANALOG_X,y1=$LEFTANALOG_Y" --ui-buttonmap "tl=$LEFT_BUT,tr=$RIGHT_BUT" --ui-buttonmap "a=$A_BUT,b=$B_BUT,x=$X_BUT,y=$Y_BUT" --ui-buttonmap "lb=$LEFT_BUMP,rb=$RIGHT_BUMP" --ui-buttonmap "lt=$LEFT_TRIG,rt=$RIGHT_TRIG" --ui-buttonmap "dl=$LEFT,dr=$RIGHT,du=$UP,dd=$DOWN" --ui-buttonmap "back=$BACK_BUT,start=$START_BUT,guide=$HOME_BUT" &) && /bin/echo "$y" >> $mounted_loc && mounted=$(/bin/cat $mounted_loc)
+				{
+					/bin/echo $supported | /bin/grep  -q -e "$y" && (/usr/bin/pkexec /usr/bin/xboxdrv --detach-kernel-driver -s --device-name "Game Pad" --device-by-id "$y" --type xbox360 --deadzone 4000 --dpad-as-button --trigger-as-button --ui-axismap "x2=$RIGHTANALOG_X,y2=$RIGHTANALOG_Y,x1=$LEFTANALOG_X,y1=$LEFTANALOG_Y" --ui-buttonmap "tl=$LEFT_BUT,tr=$RIGHT_BUT" --ui-buttonmap "a=$A_BUT,b=$B_BUT,x=$X_BUT,y=$Y_BUT" --ui-buttonmap "lb=$LEFT_BUMP,rb=$RIGHT_BUMP" --ui-buttonmap "lt=$LEFT_TRIG,rt=$RIGHT_TRIG" --ui-buttonmap "dl=$LEFT,dr=$RIGHT,du=$UP,dd=$DOWN" --ui-buttonmap "back=$BACK_BUT,start=$START_BUT,guide=$HOME_BUT" &) && /bin/echo "$y" >> $mounted_loc && mounted=$(/bin/cat $mounted_loc)
+				} || {
+					/bin/echo "$custom_add" | /bin/grep  -q -e "$y" && (/usr/bin/pkexec /usr/bin/xboxdrv --detach-kernel-driver -s --device-name "Game Pad" --device-by-id "$y" --type xbox360 --deadzone 4000 --dpad-as-button --trigger-as-button --ui-axismap "x2=$RIGHTANALOG_X,y2=$RIGHTANALOG_Y,x1=$LEFTANALOG_X,y1=$LEFTANALOG_Y" --ui-buttonmap "tl=$LEFT_BUT,tr=$RIGHT_BUT" --ui-buttonmap "a=$A_BUT,b=$B_BUT,x=$X_BUT,y=$Y_BUT" --ui-buttonmap "lb=$LEFT_BUMP,rb=$RIGHT_BUMP" --ui-buttonmap "lt=$LEFT_TRIG,rt=$RIGHT_TRIG" --ui-buttonmap "dl=$LEFT,dr=$RIGHT,du=$UP,dd=$DOWN" --ui-buttonmap "back=$BACK_BUT,start=$START_BUT,guide=$HOME_BUT" &) && /bin/echo "$y" >> $mounted_loc && mounted=$(/bin/cat $mounted_loc)
+				}
 			done
 		} || {
 			#clear it's sort of cache on the internal drive

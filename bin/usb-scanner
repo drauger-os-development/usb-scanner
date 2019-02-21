@@ -21,7 +21,7 @@
 #  MA 02110-1301, USA.
 #
 #variable pre-assignment
-VERSION="2.9.4"
+VERSION="2.9.5"
 d=0
 f=0
 help="usb-scanner, version $VERSION
@@ -50,6 +50,7 @@ while getopts 'dfhv' flag; do
         h) echo "$help"; exit 0 ;;
         d) d=1 ;;
         f) f=1 ;;
+	*) echo "\n$help\n"; exit 2 ;;
     esac
 done
 if [ "$d" == "1" ] && [ "$f" == "1" ]; then

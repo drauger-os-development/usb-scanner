@@ -1,0 +1,88 @@
+.\"Modified from man(1) of FreeBSD, the NetBSD mdoc.template, and mdoc.samples.
+.\"See Also:
+.\"man mdoc.samples for a complete listing of options
+.\"man mdoc for the short list of editing options
+.\"/usr/share/misc/mdoc.template
+.Dd 1/27/2019               \" DATE
+.Dt usb-scanner      \" Program name and manual section number
+.Sh NAME                 \" Section Header - required - don't modify
+.Nm usb-scanner
+.\" The following lines are read in generating the apropos(man -k) database. Use only key
+.\" words here as the database is built based on the words here and in the .ND line.
+.\" Use .Nm macro to designate other names for the documented program.
+.Nd Custom xboxdrv daemon
+.Sh SYNOPSIS             \" Section Header - required - don't modify
+.Nm
+.Op Fl dhv              \" [-abcd]
+.Sh DESCRIPTION          \" Section Header - required - don't modify
+.Nm
+is a xboxdrv daemon which allows for support for more controllers while also allowing it to run in the background and give the user on-demand usage access to their controller.
+.Pp                      \" Inserts a space
+A list of flags and their descriptions:
+.Bl -tag -width -indent  \" Differs from above in tag removed
+.It Fl d, --daemon                 \"-a flag as a list item
+Daemonize the running usb-scanner process and put it in the background
+.It Fl h, --help
+Print the help dialoge and exit
+.It Fl v, --version
+Print the version and exit
+.El                      \" Ends the list
+.Pp
+.Nm
+can also have alternative layout configs loaded by making a "layout.conf" file in a folder named .xboxdrv in the user's home directory. If such a file is made, make sure synatx follows this layout:
+.Bl -tag -width -indent
+.It LEFT_ANALOG=MOUSE
+.Ar Use the MOUSE setting to set an analog stick to move the cursor
+.It RIGHT_ANALOG=W:A:S:D
+.Ar Use W:A:S:D to set an analog stick to WASD
+.It A=
+.Ar Buttons not used can be left blank
+.It B=void
+.Ar or set to "void"
+.It X=null
+.Ar or set to "null", they can also be left off
+.It Y=void
+.Ar All text except "void" and "null" should be in caps
+.It LEFT_STICK_BUTTON=CLICK_MIDDLE
+.Ar For Mouse Buttons, "CLICK_" then follow with left, right, or middle
+.It RIGHT_STICK_BUTTON=Y
+.Ar For keys on the keyboard, just put it in
+.It LEFT_TRIGGER=TAB
+.Ar Put TAB for Tab
+.It RIGHT_TRIGGER=ALT
+.Ar ALT for alt
+.It LEFT_BUMPER=ESC
+.Ar ESC for esc
+.It RIGHT_BUMPER=SHIFT
+.Ar SHIFT for shift
+.It UP=CTRL
+.Ar CTRL for Ctrl
+.It DOWN=L
+.Ar Any extra text will be ignored and spacing is optional
+.It LEFT=TAB
+.Ar For the D-Pad, put the direction
+.It RIGHT=ALT
+.Ar Put a = between desired controller key and mapping target
+.It BACK=ESC
+.Ar put BACK for the Back button
+.It START=SHIFT
+.Ar START for the Start/Select Button
+.It MENU=CTRL
+.Ar and MENU for the Menu/Home button
+.El
+.Sh FILES                \" File used or created by the topic of the man page
+.Bl -tag -width "/Users/joeuser/Library/really_long_file_name" -compact
+.It Pa /bin/usb-scanner
+Main daemon program
+.It Pa /lib/usb-scanner/custom_add.list
+Partially supported controllers, add your controllers VID:PID here to test support
+.It Pa /lib/usb-scanner/supported.list
+Known supported contollers by Xboxdrv
+.It Pa /lib/usb-scanner/mounted.list
+Currently connected controllers. Present to fix a bug.
+.El                      \" Ends the list
+.Sh BUGS             \" Document known, unremedied bugs
+It's too slow and takes up a lot of CPU time. Modern versions of
+.Nm
+are better about that last part but still take up a little CPU. More noticable on lower-end processors.
+.\" .Sh HISTORY           \" Document history if command behaves in a unique manner

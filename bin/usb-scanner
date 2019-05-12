@@ -21,17 +21,17 @@
 #  MA 02110-1301, USA.
 #
 #variable pre-assignment
-VERSION="2.9.5"
+VERSION="2.9.6"
 d=0
 f=0
 cache="/lib/usb-scanner"
 help="usb-scanner, version $VERSION
 
 Options:
--d	Run usb-scanner in the background as a daemon
--h	Show this help dialogue and exit
--v	Print current version and exit
--f	Force Keyboard mapping with any connected Xbox Controller recognized
+-d\tRun usb-scanner in the background as a daemon
+-h\tShow this help dialogue and exit
+-v\tPrint current version and exit
+-f\tForce Keyboard mapping with any connected Xbox Controller recognized
 
 To add support (keep in may this may not work for all controllers)
 run 'lsusb' with your controller hooked up, determine which line
@@ -41,11 +41,11 @@ into the file $cache/custom_add.list"
 #Option handling
 while getopts 'dfhv' flag; do
     case "${flag}" in
-        v) echo "Version $VERSION"; exit 0 ;;
-        h) echo "$help"; exit 0 ;;
+        v) /bin/echo "Version $VERSION"; exit 0 ;;
+        h) /bin/echo -e "\n$help\n"; exit 0 ;;
         d) d=1 ;;
         f) f=1 ;;
-	*) echo "\n$help\n"; exit 2 ;;
+	*) /bin/echo -e "\n$help\n"; exit 2 ;;
     esac
 done
 if [ "$d" == "1" ] && [ "$f" == "1" ]; then

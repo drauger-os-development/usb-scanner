@@ -1,0 +1,34 @@
+#!/bin/bash
+# -*- coding: utf-8 -*-
+#
+#  detect
+#  
+#  Copyright 2019 Thomas Castleman <contact@draugeros.org>
+#  
+#  This program is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 2 of the License, or
+#  (at your option) any later version.
+#  
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#  
+#  You should have received a copy of the GNU General Public License
+#  along with this program; if not, write to the Free Software
+#  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+#  MA 02110-1301, USA.
+#
+file="$1"
+indic=$(cat /sys/class/input/$file/device/capabilities/abs)
+if [ "$indic" == "3003f" ]; then
+	python3 /etc/usb-scanner/buttons_xbox.py &
+elif [ "$indic" == "30027" ]; then
+	python3 /etc/usb-scanner/buttons_switch.py &
+elif [ "$indic" == "10000030027" ]; then
+	python3 /etc/usb-scanner/buttons_ps3.py &
+else
+	echo "Controller not recognized" 1>&2
+	exit 2
+fi

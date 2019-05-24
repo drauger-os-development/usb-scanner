@@ -26,7 +26,8 @@
 import pygame
 import sys
 from subprocess import Popen
-from usb-scanner.convert import type_out
+from conversion import type_out
+import re
 
 def set_procname(newname):
 	from ctypes import cdll, byref, create_string_buffer
@@ -36,6 +37,8 @@ def set_procname(newname):
 	libc.prctl(15, byref(buff), 0, 0, 0) #Refer to "#define" of "/usr/include/linux/prctl.h" for the misterious value 16 & arg[3..5] are zero as the man page says.
 
 set_procname("gb-engine2")
+
+#Parse Config file
 
 pygame.init()
 
@@ -53,97 +56,56 @@ try:
 						if button == 0:
 							print(button)
 							#button = "a"
-							Popen(["python","/usr/share/game-board/engine/conversion/type.py","space"])
+							type_out()
 							break
 						elif button == 1:
 							print(button)
 							#button = "b"
-							try:
-								Popen(["/usr/bin/killall","gb-engine1"])
-	
-							except:
-								pass
-							
-							try:
-								Popen(["/usr/bin/killall","gb-gui"])
-	
-							except:
-								pass
-							
-							try:
-								Popen(["/usr/bin/killall","gb-engine2"])
-	
-							except:
-								pass
-								
+							type_out()	
 							exit(0)
 							break
 						elif button == 2:
 							#button = "x"
 							print(button)
-							Popen(["python","/usr/share/game-board/engine/conversion/type.py","enter"])
+							type_out()
 							break
 						elif button == 3:
 							print(button)
 							#button = "y"
-							Popen(["python","/usr/share/game-board/engine/conversion/type.py","tab"])
+							type_out()
 							break
 						elif button == 4:
 							print(button)
 							#button = "left_bumper"
-							Popen(["python","/usr/share/game-board/engine/conversion/type.py","left"])
+							type_out()
 							break
 						elif button == 5:
 							print(button)
 							#button = "right_bumper"
-							Popen(["python","/usr/share/game-board/engine/conversion/type.py","right"])
-							''''''
+							type_out()
 							break
 						elif button == 6:
 							print(button)
 							#button = "back"
-							try:
-								Popen(["/usr/bin/killall","gb-gui"])
-	
-							except:
-								#restart GUI
-								print("GUI not running!")
-							break
+							type_out()
 						elif button == 7:
 							print(button)
 							#button = "start"
-							Popen(["/usr/share/game-board/engine/game-pad/sleep_mode.py"])
+							type_out()
 							break
 						elif button == 8:
 							print(button)
 							#button = "menu""
-							Popen(["python","/usr/share/game-board/ui/config.py"])
+							type_out()
 							break
 						elif button == 9:
 							print(button)
 							#left analog button
-							Popen(["python","/usr/share/game-board/engine/conversion/type.py","backspace"])
+							type_out()
 							break
 						elif button == 10:
 							#right analog button
-							print(button)
-							stdin = sys.stdin
-							stdin = stdin.split()
-							char = stdin[0]
-							printed = 0
-							try:
-								float(char)
-								try:
-									int(char)
-									printed = 1
-								except:
-									printed = 0
-							except:
-								printed = 1
-							if printed == 1:
-								char = str(char)
-								Popen(["python","/usr/share/game-board/engine/conversion/type.py",char])
-							break
+							type_out()
 						else:
 							print(button)
 							button = None

@@ -5,6 +5,6 @@ Section: misc
 Homepage: https://github.com/drauger-os-development/usb-scanner
 Architecture: all
 Priority: standard
-Depends: xboxdrv (>=0.8.8-1), usbutils (>=1:007-4build1)
+Depends: xboxdrv (>=0.8.8-1)
 Description: Custom xboxdrv daemon
  Special xboxdrv daemon that adds support for more controllers, implements auto-mounting, and the ability to add support in an easy, simple manner

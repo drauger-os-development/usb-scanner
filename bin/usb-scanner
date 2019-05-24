@@ -21,7 +21,7 @@
 #  MA 02110-1301, USA.
 #
 #variable pre-assignment
-VERSION="2.9.6"
+VERSION="2.9.7"
 d=0
 f=0
 cache="/lib/usb-scanner"

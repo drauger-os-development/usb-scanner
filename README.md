@@ -5,12 +5,20 @@ File structure:
 ```
 /
 └───lib
-    └───usb-scanner
-          |   custom_add.list
-          |   mounted.list
-          └───supported.list
-
-/
+|    └───usb-scanner
+|          |   custom_add.list
+|          |   mounted.list
+|          |   standard_layout.conf
+|          |   usb-scanner.lib
+|          └───supported.list
+|
+|
+└───etc
+|    └───usb-scanner
+|          |   import
+|          └───xbox-driver.sh
+|
+|
 └───bin
      └───usb-scanner
 ```

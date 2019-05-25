@@ -33,7 +33,7 @@ Options:
 -v\tPrint current version and exit
 -f\tForce Keyboard mapping with any connected Xbox Controller recognized
 
-To add support (keep in may this may not work for all controllers)
+To add support (keep in mind this may not work for all controllers)
 run 'lsusb' with your controller hooked up, determine which line
 that gets printed out is about your controller, and copy-paste the
 8-digit code with a colon (:) in the middle (including the colon)

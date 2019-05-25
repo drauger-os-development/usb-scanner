@@ -52,7 +52,7 @@ if [ "$fm" == "0" ]; then
 	#scan usb devices and get list of Product:Vendor IDs (PVIDs)
 		/bin/sleep 0.1s
 		#gain VID/PID
-		usb=$(lsusb | /bin/sed -e 's/.*ID \([a-f0-9]\+:[a-f0-9]\+\).*/\1/g')
+		usb=$(/etc/usb-scanner/poll.sh)
 		/bin/rm $usb_loc
 		#current USB state
 		/bin/echo "$usb" >> $usb_loc

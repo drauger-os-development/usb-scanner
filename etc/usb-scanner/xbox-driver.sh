@@ -37,22 +37,22 @@ while getopts 'fc' flag; do
 	esac
 done
 if [ "$cm" == "0" ]; then
-	mapping=$(/bin/cat /lib/usb-scanner/standard_layout.conf || ( /bin/echo '/lib/usb-scanner/standard_layout.conf cannot be read' && exit 2 ))
+	mapping=$(/bin/cat /lib/usb-scanner/standard_layout.conf || ( /etc/usb-scanner/log-out.sh "2" "/etc/usb-scanner/xbox-driver.sh" '/lib/usb-scanner/standard_layout.conf cannot be read' && exit 2 ))
 elif [ "$cm" == "1" ]; then
 	mapping=$(/etc/usb-scanner/import /lib/usb-scanner/usb-scanner.lib parser)
 	contents=$(/bin/cat $HOME/.xboxdrv/layout.conf)
 else
-	echo "Error reading flags."
+	/etc/usb-scanner/log-out.sh "2" "/etc/usb-scanner/xbox-driver.sh" "Error reading flags." 
 	exit 2
 fi
-eval "$mapping"
+eval "$mapping" || ( /etc/usb-scanner/log-out.sh "2" "/etc/usb-scanner/xbox-driver.sh" "Cannot parse designated conf file."; exit 2 )
 if [ "$fm" == "0" ]; then
 	inf=1
 	while [ "$inf" == "1" ]; do
 	#scan usb devices and get list of Product:Vendor IDs (PVIDs)
 		/bin/sleep 0.1s
 		#gain VID/PID
-		usb=$(/etc/usb-scanner/poll.sh)
+		usb=$(/etc/usb-scanner/poll.sh) || /etc/usb-scanner/log-out.sh "2" "/etc/usb-scanner/xbox-driver.sh" "poll.sh has failed. Please see error log for more details." 
 		/bin/rm $usb_loc
 		#current USB state
 		/bin/echo "$usb" >> $usb_loc
@@ -95,7 +95,7 @@ elif [ "$fm" == "1" ]; then
 	#scan usb devices and get list of Product:Vendor IDs (PVIDs)
 		/bin/sleep 0.1s
 		#gain VID/PID
-		usb=$(lsusb | /bin/sed -e 's/.*ID \([a-f0-9]\+:[a-f0-9]\+\).*/\1/g')
+		usb=$(/etc/usb-scanner/poll.sh) || /etc/usb-scanner/log-out.sh "2" "/etc/usb-scanner/xbox-driver.sh" "poll.sh has failed. Please see error log for more details." 
 		/bin/rm $usb_loc
 		#current USB state
 		/bin/echo "$usb" >> $usb_loc
@@ -112,6 +112,8 @@ elif [ "$fm" == "1" ]; then
 					/bin/echo $supported | /bin/grep  -q -e "$y" && (/usr/bin/pkexec /usr/bin/xboxdrv --detach-kernel-driver -s --device-name "Game Pad" --device-by-id "$y" --type xbox360 --deadzone 4000 --dpad-as-button --trigger-as-button --ui-axismap "x2=$RIGHTANALOG_X,y2=$RIGHTANALOG_Y,x1=$LEFTANALOG_X,y1=$LEFTANALOG_Y" --ui-buttonmap "tl=$LEFT_BUT,tr=$RIGHT_BUT" --ui-buttonmap "a=$A_BUT,b=$B_BUT,x=$X_BUT,y=$Y_BUT" --ui-buttonmap "lb=$LEFT_BUMP,rb=$RIGHT_BUMP" --ui-buttonmap "lt=$LEFT_TRIG,rt=$RIGHT_TRIG" --ui-buttonmap "dl=$LEFT,dr=$RIGHT,du=$UP,dd=$DOWN" --ui-buttonmap "back=$BACK_BUT,start=$START_BUT,guide=$HOME_BUT" &) && /bin/echo "$y" >> $mounted_loc && mounted=$(/bin/cat $mounted_loc)
 				} || {
 					/bin/echo "$custom_add" | /bin/grep  -q -e "$y" && (/usr/bin/pkexec /usr/bin/xboxdrv --detach-kernel-driver -s --device-name "Game Pad" --device-by-id "$y" --type xbox360 --deadzone 4000 --dpad-as-button --trigger-as-button --ui-axismap "x2=$RIGHTANALOG_X,y2=$RIGHTANALOG_Y,x1=$LEFTANALOG_X,y1=$LEFTANALOG_Y" --ui-buttonmap "tl=$LEFT_BUT,tr=$RIGHT_BUT" --ui-buttonmap "a=$A_BUT,b=$B_BUT,x=$X_BUT,y=$Y_BUT" --ui-buttonmap "lb=$LEFT_BUMP,rb=$RIGHT_BUMP" --ui-buttonmap "lt=$LEFT_TRIG,rt=$RIGHT_TRIG" --ui-buttonmap "dl=$LEFT,dr=$RIGHT,du=$UP,dd=$DOWN" --ui-buttonmap "back=$BACK_BUT,start=$START_BUT,guide=$HOME_BUT" &) && /bin/echo "$y" >> $mounted_loc && mounted=$(/bin/cat $mounted_loc)
+				} || {
+					/etc/usb-scanner/log-out.sh "2" "/etc/usb-scanner/xbox-driver.sh" "Joystick not recognized. VPID: $y" 
 				}
 			done
 		} || {

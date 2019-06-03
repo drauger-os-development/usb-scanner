@@ -21,7 +21,7 @@
 #  MA 02110-1301, USA.
 #
 #variable pre-assignment
-VERSION="2.9.7"
+VERSION="2.9.8"
 d=0
 f=0
 cache="/lib/usb-scanner"
@@ -40,24 +40,27 @@ that gets printed out is about your controller, and copy-paste the
 into the file $cache/custom_add.list"
 #Option handling
 while getopts 'dfhv' flag; do
-    case "${flag}" in
-        v) /bin/echo "Version $VERSION"; exit 0 ;;
-        h) /bin/echo -e "\n$help\n"; exit 0 ;;
-        d) d=1 ;;
-        f) f=1 ;;
-	*) /bin/echo -e "\n$help\n"; exit 2 ;;
-    esac
+	case "${flag}" in
+		v) /bin/echo "Version $VERSION"; exit 0 ;;
+		h) /bin/echo -e "\n$help\n"; exit 0 ;;
+		d) d=1 ;;
+		f) f=1 ;;
+		*) /bin/echo -e "\n$help\n"; exit 2 ;;
+	esac
 done
 if [ "$d" == "1" ] && [ "$f" == "1" ]; then
-    if [ -f $HOME/.xboxdrv/layout.conf ]; then 
-        /etc/usb-scanner/xbox-driver.sh -fc &
-    else
-        /etc/usb-scanner/xbox-driver.sh -f &
-    fi
+	if [ -f $HOME/.xboxdrv/layout.conf ]; then 
+		/etc/usb-scanner/xbox-driver.sh -fc &
+	else
+		/etc/usb-scanner/xbox-driver.sh -f &
+	fi
 elif [ "$d" == "1" ]; then
-    if [ -f $HOME/.xboxdrv/layout.conf ]; then 
-        /etc/usb-scanner/xbox-driver.sh -c &
-    else
-        /etc/usb-scanner/xbox-driver.sh &
-    fi
-fi
+	if [ -f $HOME/.xboxdrv/layout.conf ]; then 
+		/etc/usb-scanner/xbox-driver.sh -c &
+	else
+		/etc/usb-scanner/xbox-driver.sh &
+	fi
+else
+	/etc/usb-scanner/log-out.sh "2" "/bin/usb-scanner" "User Error: unrecognized option given"
+	exit 2
+fi 

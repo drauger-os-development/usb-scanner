@@ -33,8 +33,20 @@ if [[ -z "$list" ]] || [ "$list" == "" ] || [ "$list" == " " ]; then
 	exit 1
 else
 	for each in $list; do
-		VID=$(/bin/cat "/sys/class/input/$each/device/id/vendor")
-		PID=$(/bin/cat "/sys/class/input/$each/device/id/product")
+		{
+			VID=$(/bin/cat "/sys/class/input/$each/device/id/vendor") 
+		} || {
+			/etc/usb-scanner/log-out.sh "2" "/etc/usb-scanner/poll.sh" "Cannot cat Vendor ID file"
+			/bin/echo ""
+			exit 2
+		}
+		{
+			PID=$(/bin/cat "/sys/class/input/$each/device/id/product")
+		} || {
+			/etc/usb-scanner/log-out.sh "2" "/etc/usb-scanner/poll.sh" "Cannot cat Product ID file"
+			/bin/echo ""
+			exit 2
+		}
 		if [ -z "$list_out" ]; then
 			list_out="$VID:$PID"
 		else

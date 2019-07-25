@@ -21,7 +21,7 @@
 #  MA 02110-1301, USA.
 #
 #variable pre-assignment
-VERSION="2.9.8"
+VERSION="2.9.9"
 d=0
 f=0
 cache="/lib/usb-scanner"
@@ -61,6 +61,6 @@ elif [ "$d" == "1" ]; then
 		/etc/usb-scanner/xbox-driver.sh &
 	fi
 else
-	/etc/usb-scanner/log-out.sh "2" "/bin/usb-scanner" "User Error: unrecognized option given"
+	/etc/usb-scanner/log-out "2" "/bin/usb-scanner" "User Error: unrecognized option given" "usb-scanner" "$PWD" "$0"
 	exit 2
 fi 

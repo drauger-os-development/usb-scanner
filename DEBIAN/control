@@ -1,9 +1,9 @@
 Package: usb-scanner
-Version: 2.9.8
+Version: 2.9.9
 Maintainer: Thomas Castleman <contact@draugeros.org>
 Section: misc
 Homepage: https://github.com/drauger-os-development/usb-scanner
-Architecture: all
+Architecture: amd64
 Priority: standard
 Depends: xboxdrv (>=0.8.8-1)
 Description: Custom xboxdrv daemon

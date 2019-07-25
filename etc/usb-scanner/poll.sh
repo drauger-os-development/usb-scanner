@@ -36,14 +36,14 @@ else
 		{
 			VID=$(/bin/cat "/sys/class/input/$each/device/id/vendor") 
 		} || {
-			/etc/usb-scanner/log-out.sh "2" "/etc/usb-scanner/poll.sh" "Cannot cat Vendor ID file"
+			/etc/usb-scanner/log-out "2" "/etc/usb-scanner/poll.sh" "Cannot cat Vendor ID file" "usb-scanner" "$PWD" "$0"
 			/bin/echo ""
 			exit 2
 		}
 		{
 			PID=$(/bin/cat "/sys/class/input/$each/device/id/product")
 		} || {
-			/etc/usb-scanner/log-out.sh "2" "/etc/usb-scanner/poll.sh" "Cannot cat Product ID file"
+			/etc/usb-scanner/log-out "2" "/etc/usb-scanner/poll.sh" "Cannot cat Product ID file" "usb-scanner" "$PWD" "$0"
 			/bin/echo ""
 			exit 2
 		}
